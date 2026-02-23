@@ -54,7 +54,7 @@ Demande au joueur s'il veut faire une nouvelle partie
 
 
 ==================================
-    Plan de création du IHM
+    Plan de création du Modèle
 ==================================
 ---------------------------------------------Ongoing
 class Joueur
