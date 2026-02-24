@@ -38,7 +38,7 @@ Class Controleur :
 private Joueur j                 (il a besoin de connaitre les joueur )
 private Enregistrement save      (Il a besoin de communiqué avec enregistrement pour save les res des game)
 private IHM ihm                  (Il a besoin de l'ihm (Vu) pour savoir ce qu'a saisit le User)
-
+private Grille grille
 
 **Méthode** 
 pubic void lancerJeu()
@@ -51,12 +51,21 @@ pour que le jeu marche
 Boucle 2 :
 Demande au joueur s'il veut faire une nouvelle partie
 
+public int[] paramettreGrille(IHM ihm)
+Description : suivant le resultat de la méthode de l'ihm: public int UserInputChoiceGame()
+la méthode paramettreGrille renvera un tableau qui contiendra le nbLigne de la grille et nb de colonne de la grille
+Donc on aura une condition qui vérifira le choix du user et s'il a choisit morpion je crée directement un tableau qui contient les valeur nbligne et nb colonne 
+même chose si le choix avait été puissance 4 
+Ensuite l'idée est que le tableau qui sera renvoyé par le methode sera stocker dans une variable. Et avec cette variable, on 
+Intancie grille pour lui mettre dans son constructeur les données de la variable 
+Car dans la class grille on a un constructeur qui prend en paramètre le nb ligne et nb colonne
+Comme cela on peut manipuler grille sans avoir à passer par une methode pour la crée 
 
 
 ==================================
     Plan de création du Modèle
 ==================================
----------------------------------------------Ongoing
+---------------------------------------------SOS
 class Joueur
 **Attribut**:
 private string PlayerName
@@ -64,7 +73,7 @@ private string PlayerName
 
 
 
----------------------------------------------Semi-Competed
+---------------------------------------------Competed
 Class Grille :
 Note : Cette class communique avec Jeu
 
@@ -76,10 +85,11 @@ private int nbColonne
 
 Note 1 : On aura besoin du nb de ligne et colonne afin de pouvoir faire des op° sur la grille
 
-Note 2 : game aura un constructeur qui prendra en paramettre le nb de ligne et nb de colonne et pourra crée un tableau
+Note 2 : grille aura un constructeur qui prendra en paramettre le nb de ligne et nb de colonne et pourra crée un tableau
          à partir de ces valeurs
+(oublie pas qu'on peut faire cela : this.plateau = new int[nbCol][nbLi];) <- on crée directement notre tableau
 
-        - Sous Note 2: Ce sera Controleur qui passea les valeur nb ligne et nb colonne à Grille (Avant les boucles du jeu)
+        - Sous Note 2: Ce sera Controleur qui passera les valeur nb ligne et nb colonne à Grille (Avant les boucles du jeu)
         En gros on fera un petit condition qui en fonction du résultat de la méthode : UserInputChoiceGame() dans l'IHM
         Si le choix et morption on crée l'instance de Grille en passant en paramètre : Grille(3,3)
         Sinon on passe en paramètre : Grille(6,7) <- Dimension plateau puissance 4
@@ -96,9 +106,7 @@ public void displayGrille()
 Description : Affichera l'état de la grille donc tu aura une 2 boucle qui parcouront le tableau et afficheront les valeur sous la forme d'un plateau
 
 
-public void saisirVal (int[] UserInput)
-Description : stockera les coordonnés saisi par User dans le tableau représentant le plateau 
-Note : Ces valeur auront déjà était Vérifier dans la class Controleur 
+
 
 
 
@@ -107,7 +115,7 @@ Note : Ces valeur auront déjà était Vérifier dans la class Controleur
 Class Enregistrement  :
 
 Description : 
-Stockera les info des différente partie dans un Map (**clé** = Nom J; **valeur** = G (gagné)  ou P (perdue) (autre option tu met 1 pour G et 0 pour P comme ça cela évite de stocker des srting)
+Stockera les infos des différentes partie dans un Map (**clé** = Nom J; **valeur** = G (gagné)  ou P (perdue) (autre option tu met 1 pour G et 0 pour P comme ça cela évite de stocker des srting)
 Note : Enregistrement communiquera uniquement avec Controleur
 
 **Attribut** : 
@@ -135,18 +143,32 @@ Une class abstract mère: Jeu
 Et comme elle est abstraite on aura pas à les implémenter mtn)
 
 **Attribut**
+private Grille plateau 
+private Joueur j1
+private Joueur j2
 
 
 **Méthode à implémenter dans les class enfant : Morpion et Puissance 4**
 
-public boolean win()   <- Note : les paramètres dépendront du jeu  
+public boolean win()   <- Note : les paramètres dépendront du jeu (Si Morpion il prendre 3 valeur et vérif si c'est les même, Si Puissance 4 il prendra 4 valeur) 
 Description : 
 Vérif si un joueur a gagné et renvoie True si G ou false si non 
+Note : à voir si dans les paramètre on met aussi le joueur comme ça on sait qui a gagné 
 
+public boolean VerifCoord(int[] UserInputGame)
+Description : 
+Vérifie les coordonnées saisi par l'utilisateur sont valide et si c'est pas le cas, renvoie une exception donc sur la signature de la méthode on fait un throws InputMismatchException 
+qu'on gérera avec un try catch dans le controleur 
 
 
 -------------------------------------------------------Ongoing
 Class enfant Morpion (hérite jeu)
+
+**Attribut**
+private int nbligne   <- Le constructeur de Morpion recevra un tableau contenant les valeur  nbligne, nbcolone qu'on dispatchra dans les attribut nbligne et nbcolonne
+private int nbcolone  <-|
+private Grille plateau = new Grille(nbligne, nbcolonne)
+**Methode**
 
 public boolean win( int cas1, int case2, int case3)  
 Description :
@@ -158,18 +180,18 @@ Détaillent les conditions de victoire Du Morpion
                                                                                   x
                                                                                   x  
 - Même principe pour la diagonal, au morpion tu en as 2 donc tu vérif les 2 avec une cond
-mais au puissance 4 ça va être chiant à faire
+
 
 VerifCoord(int l, int c)  (l=ligne, c=colonne)
 déscription : Vérifie si les coordonné renseigné par le joueur sont valides
 c'est à dire :
 - le joueur ne doit pas saisir des coordonnés hors de la grille
-- Il ne doit pas resaisir les coordonnés d'une case où il y a déjà un pion
-
+- Il ne doit pas ressaisir les coordonnés d'une case où il y a déjà un pion
 
 
 -------------------------------------------------------Ongoing
 Class enfant Puissance 4 (hérite jeu)
+
 
 
 
