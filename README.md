@@ -65,10 +65,31 @@ Comme cela on peut manipuler grille sans avoir à passer par une methode pour la
 ==================================
     Plan de création du Modèle
 ==================================
----------------------------------------------SOS
+---------------------------------------------Competed
 class Joueur
 **Attribut**:
 private string PlayerName
+private int idJoueur
+private static int cptJoueur
+
+**Méthode**
+getplayerName
+getidJoueur
+
+Pourquoi avoir fait un identifiant ? 
+Car quand j'ai voulut coder la class Morpion je me suis aperçus qu'il me manquer une information 
+En effet, Afin de savoir quel Joueur avais quoi comme pion,
+Je me suis aperçus qu'il fallait que je les identifie 
+et comme je voulais pas utiliser le nom car je me faisais des neux à la tete pour rien 
+car dans la grille les symbole sont représenter par 1 pour X et 2 pour O
+Donc il fallait que je fasse une association avec le nom du Joueur et 1 et 2 
+avec un identifiant entre 1 et 2 
+dans la méthode qui vérifira les conditions de réussite j'aurai qu'à comparer si l'identifiant du joueur = le symbole
+et on saura qui détient quoi 
+
+Si on nous demande lors de la prochaine itération que le joueur choisisse son pion, on aura qu'a faire un méthode 
+qui associe l'identifant du joueur au pion selon le choix entré par le Joueur 
+
 
 
 
@@ -106,11 +127,17 @@ public void displayGrille()
 Description : Affichera l'état de la grille donc tu aura une 2 boucle qui parcouront le tableau et afficheront les valeur sous la forme d'un plateau
 
 
+Note on fait 2 methode display 
+displayGrilleM pour le morpion
+displayGrilleP pour le puissance4
 
+public void SaisirVal(int l, in c, int idjoueur) <- idjoueur = 1 pour le joueur1 et 2 pour le joueur2 puis au coordonné indiquer, on mettra l'idjoueur 
+Description : 
+Ecrit les valeur dans 
 
-
-
-
+public boolean checkCoord(int l, int c)
+Description : 
+Vérifie si les coordonnés sont valide 
 ---------------------------------------------Competed
 Class Enregistrement  :
 
@@ -121,8 +148,22 @@ Note : Enregistrement communiquera uniquement avec Controleur
 **Attribut** : 
 private Map<String, Integer> dico  (un map)
 
+
+
+
+Réctification J'ai oublié qu'un map ne peut pas avoir de doublon au niveau des clé 
+Donc la solution c'est d'avoir un Map comme cela : Map<String,int[]>
+Ainsi, on aura juste 2 paire de valeur dont les clé seront le nom des joueurs et les valeur seront des tableaux qui regrouperont les sérit de victoire des joueur
+
+Autre solution : 
+faire un Map<String,Integer>
+parail ici on a 2 paire de valeur mais la valeur c'est déjà le nb de victoire gagné qui sera incrémenter dans la méthode ajouterRes
+
 Note : la class enregistrement n'a pas à connaitre de class (De mon point de vu)
-        Donc seul un attribut map est suffisant 
+Donc seul un attribut map est suffisant 
+// plus mtn :
+car après avoir pensé aux alternatives, je pense que les class Morpion et Puissance 4 communiquront avec Enregistrement
+Mais Enregistrement n'aura pas à connaitre de class 
 
 **Méthode** : 
 
