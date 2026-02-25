@@ -8,27 +8,24 @@ public class IHM {
     }
 
     // Méthode qui récupère les coordonnées(ligne et colonne)
-    public int[][] UserInputGame() {
+    public int[] UserInputGame() {
 
-        int[][] coordonnees = new int[1][2];
+        int[] coordonnees = new int[2];
 
         System.out.println("Entrer la ligne : ");
-        coordonnees[0][0] = sc.nextInt();
+        coordonnees[0] = sc.nextInt();
 
         System.out.println("Entrer la colonne : ");
-        coordonnees[0][1] = sc.nextInt();
+        coordonnees[1] = sc.nextInt();
 
         sc.nextLine();
         return coordonnees;
-
-
-
     }
 
     // Description : récupère nom Joueur
 
     public int UserInputChoiceGame() {
-        System.out.println("Choisissez un mode de jeu : ");
+        System.out.println("Choisissez un mode de jeu : " +"\n          1 : Morpion !\n          2 : Puissance 4 ! ");
         int choix = sc.nextInt();
         sc.nextLine();
         return choix;
@@ -48,12 +45,4 @@ public class IHM {
         return sc.nextLine();
 
     }
-
-
-
-
-
-
-
-
 }
