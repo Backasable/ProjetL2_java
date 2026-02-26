@@ -10,4 +10,6 @@ public abstract class Jeu
     }
 
     public abstract boolean win();
+    public abstract boolean equals();
+
 }
