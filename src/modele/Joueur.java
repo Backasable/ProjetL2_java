@@ -11,7 +11,7 @@ public class Joueur
         this.nom = nom;
         this.idJoueur = cptJoueur;
 
-        cptJoueur++
+        cptJoueur++;
     }
 
     public int  getidJoueur()

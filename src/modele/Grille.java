@@ -1,4 +1,5 @@
 package modele;
+
 public class Grille
 {
     private int[][] plateau;
@@ -105,20 +106,33 @@ public class Grille
         }
     }
 
-    public void saisirVal(int ligne, int colonne, int idJoueur)
+
+    // Note :
+    // coord[0] -> la ligne entrer par User
+    // coord[1] -> la colonne enter par User
+    public void saisirVal(int[] coord, int idJoueur)
     {
-        plateau[ligne][colonne] = idJoueur;
+        plateau[coord[0]][coord[1]] = idJoueur;
     }
 
+
+
     // On check les coordonné entrer par le Joueur
-    public boolean CheckCoord(int ligne, int colonne, int idJoueur)
+    public boolean CheckCoord(int[] coord)
     {
+
+        // Rappel :
+        // coord[0] -> la ligne entrer par User
+        // coord[1] -> la colonne enter par User
+
         // Pourquoi -1 car le length compte à partir de 1 alors que la taille du tableau commence à 0
-        if (ligne> plateau.length -1 || colonne > plateau[ligne].length -1 )
+        // Si la ligne saisi par User et > au nb de ligne du plateau alors faux
+        // même chose pour les colonne
+        if (coord[0] > plateau.length -1 || coord[1] > plateau[coord[0]].length -1 )
         {
             return false;
         }
-        else if(plateau[ligne][colonne] != 0)
+        else if(plateau[coord[0]][coord[1]] != 0)
         {
             return false;
         }

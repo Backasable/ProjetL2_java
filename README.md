@@ -135,7 +135,7 @@ public void SaisirVal(int l, in c, int idjoueur) <- idjoueur = 1 pour le joueur1
 Description : 
 Ecrit les valeur dans 
 
-public boolean checkCoord(int l, int c)
+public boolean checkCoord(int[] coord)
 Description : 
 Vérifie si les coordonnés sont valide 
 ---------------------------------------------Competed
@@ -195,11 +195,6 @@ public boolean win()   <- Note : les paramètres dépendront du jeu (Si Morpion 
 Description : 
 Vérif si un joueur a gagné et renvoie True si G ou false si non 
 Note : à voir si dans les paramètre on met aussi le joueur comme ça on sait qui a gagné 
-
-public boolean VerifCoord(int[] UserInputGame)
-Description : 
-Vérifie les coordonnées saisi par l'utilisateur sont valide et si c'est pas le cas, renvoie une exception donc sur la signature de la méthode on fait un throws InputMismatchException 
-qu'on gérera avec un try catch dans le controleur 
 
 
 -------------------------------------------------------Ongoing
