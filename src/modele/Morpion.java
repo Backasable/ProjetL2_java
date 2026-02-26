@@ -13,5 +13,15 @@ public class Morpion extends Jeu
         this.plateau = new Grille(3,3);
     }
 
+    @Override
+    public boolean equals(     ){
+        // à toi de jouer !
+    }
+
+    @Override
+    public boolean win(   ){
+        // à toi de jouer !
+
+    }
 
 }
