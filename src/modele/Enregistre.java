@@ -1,19 +1,20 @@
-import java.util.Map;
+package modele;
+import java.util.HashMap;
 
 public class Enregistre
 {
-    private Map<String, Integer> dico;
+    private HashMap<String, Integer> dico;
 
     public Enregistre()
     {
         this.dico = new HashMap<>();
     }
 
-    public ajouterRes(String PlayerName)
+    public void ajouterRes(String PlayerName)
     {
-        if (containsKey(PlayerName))
+        if (this.dico.containsKey(PlayerName))
         {
-            dico.put(PlayerName,dico.get(PlayerName)+1)
+            dico.put(PlayerName,dico.get(PlayerName)+1);
         }
         else
         {
@@ -23,9 +24,38 @@ public class Enregistre
 
     public String CalculerVainqueur()
     {
-    Set<String> EnembleCle= this.dico.keySet()
-    {
-        if
-    }
+        // Là j'adapte le tableau selon la taille du dico car au début j'avais mis une taille fixe 2 mais j'ai eut des problèmes
+        // Comme le fait que les condition en dessous ne soit pas faite dans le bonne ordre
+        // et puis c'est plus élégant comme cela !
+        String[] keytab = new String[this.dico.size()];
+
+        int cpt = 0;
+        for (String key : this.dico.keySet())
+        {
+            keytab[cpt]=key;
+            cpt++;
+        }
+
+        // On gère le cas où personne n'a gagné :
+        if (keytab.length == 0)
+        {
+            return "Egalité";
+        }
+
+        // On gère le cas où 1 joueur à gagné tout les parties
+        else if (keytab.length == 1)
+        {
+            return keytab[0];
+        }
+
+        // On gère le cas où les 2 joueur on au moin gagné 1 partie
+        else if (this.dico.get(keytab[0]) > this.dico.get(keytab[1]))
+        {
+            return keytab[0];
+        }
+        else
+        {
+            return keytab[1];
+        }
     }
 }
