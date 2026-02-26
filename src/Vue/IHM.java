@@ -8,7 +8,7 @@ public class IHM {
     }
 
     // Méthode qui récupère les coordonnées(ligne et colonne)
-    public int[] UserInputGame() {
+    public int[] UserInputGameM() {
 
         int[] coordonnees = new int[2];
 
@@ -20,6 +20,15 @@ public class IHM {
 
         sc.nextLine();
         return coordonnees;
+    }
+
+    // Récup la colonne saisi par le Joueur pour le Puissance 4
+    public int UserInputGameP()
+    {
+
+        System.out.println("Entrer la colonne : ");
+        return sc.nextInt();
+
     }
 
     // Description : récupère nom Joueur

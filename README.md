@@ -135,9 +135,23 @@ public void SaisirVal(int l, in c, int idjoueur) <- idjoueur = 1 pour le joueur1
 Description : 
 Ecrit les valeur dans 
 
-public boolean checkCoord(int[] coord)
+public boolean checkCoordM(int[] coord)
 Description : 
 Vérifie si les coordonnés sont valide 
+
+************Méthode de la grille pour le puissance 4************
+public boolean checkCood(int colonne)
+Description : vérif si la colonne saisi est valide 
+
+public int[] findCaseVide()
+// -> Cette méthode est la stratégie pour : 
+// Simuler que le pion déscende jusqu'à avoir touché
+// le pion de la case d'en dessous :
+
+    // Vérifie si la colonne indiquer est vide puis vérifie si celle en dessous si elle est vide ou pas
+    // et se réitère jusqu'à trouver la colonne
+    // pour laquelle, la colonne qui suit n'est plus vide
+    // Et ainsi renvoyer les coordonnés de la colonne qui est vide
 ---------------------------------------------Competed
 Class Enregistrement  :
 
@@ -158,6 +172,8 @@ Ainsi, on aura juste 2 paire de valeur dont les clé seront le nom des joueurs e
 Autre solution : 
 faire un Map<String,Integer>
 parail ici on a 2 paire de valeur mais la valeur c'est déjà le nb de victoire gagné qui sera incrémenter dans la méthode ajouterRes
+-> Je part sur cette solution bcp plus simple
+
 
 Note : la class enregistrement n'a pas à connaitre de class (De mon point de vu)
 Donc seul un attribut map est suffisant 
@@ -177,7 +193,7 @@ Description : Va renvoyer le nom du joueur qui a remporter le plus de partie
 
 
 
--------------------------------------------------Ongoing
+-------------------------------------------------Competed
 Une class abstract mère: Jeu
 
 (ici ce sera un class qui regroupera les methodes que vont avoir nos jeu
@@ -194,16 +210,24 @@ private Joueur j2
 public boolean win()   <- Note : les paramètres dépendront du jeu (Si Morpion il prendre 3 valeur et vérif si c'est les même, Si Puissance 4 il prendra 4 valeur) 
 Description : 
 Vérif si un joueur a gagné et renvoie True si G ou false si non 
-Note : à voir si dans les paramètre on met aussi le joueur comme ça on sait qui a gagné 
+Note : à voir si dans les paramètres on met aussi l'id du joueur comme ça on sait qui a gagné 
 
 
 -------------------------------------------------------Ongoing
 Class enfant Morpion (hérite jeu)
 
 **Attribut**
+(
 private int nbligne   <- Le constructeur de Morpion recevra un tableau contenant les valeur  nbligne, nbcolone qu'on dispatchra dans les attribut nbligne et nbcolonne
 private int nbcolone  <-|
 private Grille plateau = new Grille(nbligne, nbcolonne)
+)
+ -> C'est plus d'actualité, au début je voulais dans la class controleur une méthode
+qui prenait en paramètre le choix de l'utilisateur et renvoyer un tableau avec la taille de la grille (nbLigne et nbcolonne)
+déjà dedant 
+Mais en faisant le lendemain la class Morpion j'ai crée directement dans le constructeur, la grille avec les dimensions déjà dedant 
+Comme ça pas besoin de faire tout ce à quoi j'avais pensé avant et c'est plus simple !
+
 **Methode**
 
 public boolean win( int cas1, int case2, int case3)  
@@ -218,11 +242,17 @@ Détaillent les conditions de victoire Du Morpion
 - Même principe pour la diagonal, au morpion tu en as 2 donc tu vérif les 2 avec une cond
 
 
+(
 VerifCoord(int l, int c)  (l=ligne, c=colonne)
 déscription : Vérifie si les coordonné renseigné par le joueur sont valides
 c'est à dire :
 - le joueur ne doit pas saisir des coordonnés hors de la grille
 - Il ne doit pas ressaisir les coordonnés d'une case où il y a déjà un pion
+)
+// -> Je l'ai mis dans la class grille directement comme
+cela on respecte le principe de : expert en information
+car sinon si on verfi les coordonner saisi par l'user directement dans Morpion, 
+faudra aller chercher les info de la grille dans la class Grille et c'est fatiguant !
 
 
 -------------------------------------------------------Ongoing
