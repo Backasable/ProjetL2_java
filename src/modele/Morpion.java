@@ -14,14 +14,39 @@ public class Morpion extends Jeu
     }
 
     @Override
-    public boolean equals(     ){
-        // à toi de jouer !
+    public static boolean equals(int entier1, int entier2, int entier3, int entier4){
+        boolean compare = false;
+
+        if(entier1 == entier2 && entier2 == entier3 && entier3 == entier4){
+            compare = true;
+        }
+        return compare;
+
     }
 
     @Override
-    public boolean win(   ){
-        // à toi de jouer !
+    public static boolean win(int[][] plateau, int numJoueur){
+        //Ligne
+        for (int cptLignes = 0; cptLignes < plateau.length; cptLignes++){
+            if(equals(plateau[cptLignes][0], plateau[cptLignes][1], plateau[cptLignes][2], numJoueur)){
+                return true;
+            }
+        }
+        //colonne
+        for(int cptColonnes = 0; cptColonnes < plateau.length; cptColonnes++) {
+            if (equals(plateau[0][cptColonnes], plateau[0][cptColonnes],plateau[0][cptColonnes], numJoueur)) {
+                return true;
+            }
+        }
+        // Diagonal
+        if(equals(plateau[0][0], plateau[1][1], plateau[2][2], numJoueur) || equals(plateau[2][0], plateau[1][1], plateau[0][2], numJoueur)){
+            return true;
+        }
+
+        return false;
 
     }
+
+
 
 }
