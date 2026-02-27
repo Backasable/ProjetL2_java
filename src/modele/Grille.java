@@ -2,7 +2,7 @@ package modele;
 
 public class Grille
 {
-    private int[][] plateau;
+    public int[][] plateau;  // <- public car j'en ai besoin dans Puissance_4
     private int nbLigne;
     private int nbColonne;
 
@@ -14,15 +14,25 @@ public class Grille
         this.plateau = new int[nbLigne][nbColonne];
 
     }
+    public int getNbcol()
+    {
+        return this.nbColonne;
+    }
+
+    public int getNbLigne()
+    {
+        return this.nbLigne;
+    }
 
     // Affiche la grille pour le Puissance 4
     public void displayGrilleP()
     {
-
-
+        System.out.println();
+        System.out.println("************************");
+        System.out.print(" ");
         for (int cptCol = 0; cptCol< nbColonne; cptCol++)
         {
-            System.out.print(cptCol + " ");
+            System.out.print(" "+ cptCol + " ");
         }
         System.out.println();
 
@@ -60,38 +70,42 @@ public class Grille
     public void displayGrilleM()
     {
         // Affichage des coordonné des colonnes
-        System.out.print("  ");
+        System.out.print("   ");
+
 
         for (int cptCol = 0; cptCol< nbColonne; cptCol++)
         {
-            System.out.print(cptCol + " ");
+            System.out.print(" "+cptCol + " ");
         }
         System.out.println();
+
 
 
         // Début affichage de la grille
         for (int cptLig = 0; cptLig< nbLigne; cptLig++)  // cpt = compteur
         {
-            System.out.print(cptLig +" ");  // <- affichage des coordonné des lignes
+            System.out.print(" " +cptLig +" ");  // <- affichage des coordonné des lignes
 
             for (int cptCol = 0; cptCol < nbColonne; cptCol++)
             {
 
                 if (plateau[cptLig][cptCol] == 0)
                 {
-                    System.out.print("- ");
+                    System.out.print(" - ");
 
                 } else if (plateau[cptLig][cptCol] == 1) // 1 = id du joueur1
                 {
-                    System.out.print("X ");
+                    System.out.print(" X ");
                 }
                 else if(plateau[cptLig][cptCol] == 2) // 2 = id du joueur2
                 {
-                    System.out.print("O ");
+                    System.out.print(" O ");
                 }
             }
             System.out.println();
+
         }
+
     }
 
     // Efface la grille
@@ -113,15 +127,22 @@ public class Grille
     // Note :
     // coord[0] -> la ligne entrer par User
     // coord[1] -> la colonne enter par User
-    public void saisirVal(int[] coord, int idJoueur)
+    public void saisirVal(int[] coord, int idJoueur) throws PionDejaPresent
     {
-        plateau[coord[0]][coord[1]] = idJoueur;
+        // On vérif si il n'y pas déjà un pion sur cette case
+        if (!(plateau[coord[0]][coord[1]] != 0))
+        {
+            throw new PionDejaPresent("Pion déjà Present : ");
+        }
+        else
+        {
+            plateau[coord[0]][coord[1]] = idJoueur;
+        }
+
     }
 
-
-
-    // On check les coordonné entrer par le Joueur pour le Morpion
-    public boolean checkCoord(int[] coord)
+    // On check les coordonné entrer par le Joueur
+    public boolean checkCoordM(int[] coord)
     {
 
         // Rappel :
@@ -133,12 +154,15 @@ public class Grille
         // même chose pour les colonne
         if (coord[0] > this.nbLigne || coord[1] > this.nbColonne)
         {
+
             return false;
         }
-        // Verif si la case n'est pas vide
+        // Verif si la case n'a pas déjà un pion
         else if(plateau[coord[0]][coord[1]] != 0)
         {
+            System.out.println("pion déjà présent ");
             return false;
+
         }
         else
         {
@@ -147,19 +171,14 @@ public class Grille
 
     }
 
-// Méthode lié au puissance 4 :
 
-    //
-    public boolean checkValColoneP(int col)
-    {
-        return col < this.nbColonne;
-    }
-
+//=====================================================================================================
     // Stratégie pour simuler que le pion déscende jusqu'à touché
     // le pion de la case d'en dessous :
 
-    // Vérifie si la colonne indiquer est vide puis vérifie si celle en dessous si elle est vide ou pas
-    // et se réitère jusqu'à trouver la colonne
+    // Idée :
+    // Vérifie si la colonne indiquer est vide puis vérifie si celle en dessous, est vide ou non
+    // et on réitère jusqu'à trouver la colonne
     // pour laquelle, la colonne qui suit n'est plus vide
     // Et ainsi renvoyer les coordonnés de la colonne qui est vide
     public int[] findCaseVide(int col)
@@ -167,30 +186,31 @@ public class Grille
         int[] CaseVide = new int[2];
         int ligne = 0; // <- la ligne de départ (Rappel -1 car, indice en java commence à 0 et le nb ligne est det avec lenght qui commence à 1)
 
-
-
         {
-            // On vérifie tjr si on est pas hors limite
+            // On vérifie tjr si on est pas hors limite !!!
             // Donc on regarde si, la valeur de ligne qu'on incrément est toujours dans l'interval de la taille du tableau
-            // Et ensuite si la prochaine colonne en dessous est vide.
-            while ( 0 <= ligne+1 && ligne+1 < nbLigne &&         plateau[ligne+1][col] == 0)
+            //
+            // ET Ensuite :
+            // si la prochaine colonne en dessous est vide.
+
+            while ( (0 <= ligne+1 && ligne+1 < this.nbLigne) && plateau[ligne+1][col] == 0)
             {
                 // Alors on incrémente ligne pour descendre dans notre tab
-                // et on réitère jusqu'à : soit avoir atteint la limite du tab, soit : avoir trouver une case vide pour laquelle la prochaine case est pleine
+                // et on réitère jusqu'à :
+                //  - soit avoir atteint la limite du tab
+                //  - soit avoir trouver une case vide pour laquelle la prochaine case est pleine
+
                 ligne++;
             }
 
-            // Là on est sorti de la boucle donc ou ça veut dire qu'on a trouver la case vide où notre pion va aller
+            // Là on est sorti de la boucle donc ça veut dire qu'on a trouver la case vide où notre pion va aller
             // On stock donc ses coordonnés dans un tableau
             CaseVide[0] = ligne;
             CaseVide[1] = col;
 
             return CaseVide;
-
-
-
         }
-
-
     }
+//===================================================================================
+
 }

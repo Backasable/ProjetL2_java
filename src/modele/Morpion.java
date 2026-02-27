@@ -1,4 +1,4 @@
-public class Morpion extends Jeu
+public class Morpion
 // lien de la vidéo : https://www.youtube.com/watch?v=vEf9Ar_4wH8&t=634s
 // rend toi au time code 14:25
 // C'est ici qu'il détail la partie sur win
@@ -13,7 +13,6 @@ public class Morpion extends Jeu
         this.plateau = new Grille(3,3);
     }
 
-    @Override
     public static boolean equals(int entier1, int entier2, int entier3, int entier4){
         boolean compare = false;
 
