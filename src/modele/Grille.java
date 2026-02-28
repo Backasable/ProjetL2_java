@@ -1,4 +1,6 @@
-package modele;
+package projet_java.modele;
+
+import projet_java.PionDejaPresent;
 
 public class Grille
 {
@@ -24,103 +26,24 @@ public class Grille
         return this.nbLigne;
     }
 
-    // Affiche la grille pour le Puissance 4
-    public void displayGrilleP()
-    {
-        System.out.println();
-        System.out.println("************************");
-        System.out.print(" ");
-        for (int cptCol = 0; cptCol< nbColonne; cptCol++)
-        {
-            System.out.print(" "+ cptCol + " ");
-        }
-        System.out.println();
 
-        System.out.println("-----------------------");  // <- On dessine la ligne du haut du Puiss 4
-
-        // Début affichage du plateau
-        for (int cptLig = 0; cptLig< nbLigne; cptLig++)  // cpt = compteur
-        {
-
-            System.out.print("|");
-            for (int cptCol = 0; cptCol < nbColonne; cptCol++)
-            {
-
-                if (plateau[cptLig][cptCol] == 0)
-                {
-                    System.out.print(" - ");
-
-                } else if (plateau[cptLig][cptCol] == 1) // 1 = id du joueur1
-                {
-                    System.out.print(" J "); // pion Jaune
-                }
-                else if(plateau[cptLig][cptCol] == 2) // 2 = id du joueur2
-                {
-                    System.out.print(" R "); // pion Rouge
-                }
-            }
-            System.out.print("|");
-            System.out.println();
-        }
-        System.out.println("-----------------------"); // <- dessine la ligne de la grille du bas
-
-    }
-
-    // Grille pour le morpion
-    public void displayGrilleM()
-    {
-        // Affichage des coordonné des colonnes
-        System.out.print("   ");
-
-
-        for (int cptCol = 0; cptCol< nbColonne; cptCol++)
-        {
-            System.out.print(" "+cptCol + " ");
-        }
-        System.out.println();
-
-
-
-        // Début affichage de la grille
-        for (int cptLig = 0; cptLig< nbLigne; cptLig++)  // cpt = compteur
-        {
-            System.out.print(" " +cptLig +" ");  // <- affichage des coordonné des lignes
-
-            for (int cptCol = 0; cptCol < nbColonne; cptCol++)
-            {
-
-                if (plateau[cptLig][cptCol] == 0)
-                {
-                    System.out.print(" - ");
-
-                } else if (plateau[cptLig][cptCol] == 1) // 1 = id du joueur1
-                {
-                    System.out.print(" X ");
-                }
-                else if(plateau[cptLig][cptCol] == 2) // 2 = id du joueur2
-                {
-                    System.out.print(" O ");
-                }
-            }
-            System.out.println();
-
-        }
-
-    }
 
     // Efface la grille
-    public void clearGrille()
+    public boolean checkGrillefull()
     {
         for (int cptLig = 0; cptLig< nbLigne; cptLig++)  // cpt = compteur
         {
             for (int cptCol = 0; cptCol < nbColonne; cptCol++)
             {
-                if(this.plateau[cptLig][cptCol] != 0)
+                // Si on trouve ne serait-ce qu'une colonne qui est vide alors on retourne faux
+                if(this.plateau[cptLig][cptCol] == 0)
                 {
-                    this.plateau[cptLig][cptCol] = 0;
+                    return false;
                 }
+
             }
         }
+        return true;
     }
 
     // Saisir les val pour le Morpion dans le tableau
@@ -130,7 +53,7 @@ public class Grille
     public void saisirVal(int[] coord, int idJoueur) throws PionDejaPresent
     {
         // On vérif si il n'y pas déjà un pion sur cette case
-        if (!(plateau[coord[0]][coord[1]] != 0))
+        if (!(plateau[coord[0]][coord[1]] == 0))
         {
             throw new PionDejaPresent("Pion déjà Present : ");
         }
@@ -141,35 +64,6 @@ public class Grille
 
     }
 
-    // On check les coordonné entrer par le Joueur
-    public boolean checkCoordM(int[] coord)
-    {
-
-        // Rappel :
-        // coord[0] -> la ligne entrer par User
-        // coord[1] -> la colonne enter par User
-
-
-        // Si la ligne saisi par User et > au nb de ligne du plateau alors faux
-        // même chose pour les colonne
-        if (coord[0] > this.nbLigne || coord[1] > this.nbColonne)
-        {
-
-            return false;
-        }
-        // Verif si la case n'a pas déjà un pion
-        else if(plateau[coord[0]][coord[1]] != 0)
-        {
-            System.out.println("pion déjà présent ");
-            return false;
-
-        }
-        else
-        {
-            return true;
-        }
-
-    }
 
 
 //=====================================================================================================

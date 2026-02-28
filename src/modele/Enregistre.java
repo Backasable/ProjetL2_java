@@ -1,5 +1,8 @@
-package modele;
+package projet_java.modele;
+
 import java.util.HashMap;
+import java.util.HashMap;
+
 
 public class Enregistre
 {
@@ -27,6 +30,7 @@ public class Enregistre
         // Là j'adapte le tableau selon la taille du dico car au début j'avais mis une taille fixe 2 mais j'ai eut des problèmes
         // Comme le fait que les condition en dessous ne soit pas faite dans le bonne ordre
         // et puis c'est plus élégant comme cela !
+        // et surtout c'est un galère avec entryset pour récup une clé à partir d'une valeur donc je passe par un tableau
         String[] keytab = new String[this.dico.size()];
 
         int cpt = 0;
@@ -39,10 +43,10 @@ public class Enregistre
         // On gère le cas où personne n'a gagné :
         if (keytab.length == 0)
         {
-            return "Egalité";
+            return null;
         }
 
-        // On gère le cas où 1 joueur à gagné tout les parties
+        // On gère le cas où : 1 joueur à gagné tout les parties
         else if (keytab.length == 1)
         {
             return keytab[0];

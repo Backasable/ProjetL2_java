@@ -1,44 +1,48 @@
+package projet_java.modele;
+
+
+import projet_java.CoordonneHorsLimite;
+import projet_java.PionDejaPresent;
+
 public class Morpion
-// lien de la vidéo : https://www.youtube.com/watch?v=vEf9Ar_4wH8&t=634s
-// rend toi au time code 14:25
-// C'est ici qu'il détail la partie sur win
-// Tu devras peut-être crée un méthode equals en plus de win et
-// /!\ tu n'as pas à faire de methode checkCoord() /!\
-// Elle est déjà dans Grille
 {
-    private Grille plateau;
-    public Morpion(String PlayerName1, String PlayerName2)
+    public Grille g;
+    public Morpion()
     {
-        super(PlayerName1, PlayerName2);
-        this.plateau = new Grille(3,3);
+        this.g = new Grille(3,3);
     }
 
-    public static boolean equals(int entier1, int entier2, int entier3, int entier4){
+
+    public boolean equals(int entier1, int entier2, int entier3, int idJoueur){
         boolean compare = false;
 
-        if(entier1 == entier2 && entier2 == entier3 && entier3 == entier4){
+        if(entier1 == entier2 && entier2 == entier3 && entier3 == idJoueur){
             compare = true;
         }
         return compare;
 
     }
 
-    @Override
-    public static boolean win(int[][] plateau, int numJoueur){
+
+    public boolean win(Joueur j){
         //Ligne
-        for (int cptLignes = 0; cptLignes < plateau.length; cptLignes++){
-            if(equals(plateau[cptLignes][0], plateau[cptLignes][1], plateau[cptLignes][2], numJoueur)){
+        int idJoueur = j.getidJoueur();
+        int nbLigne = g.getNbLigne();
+        int nbColonne = g.getNbcol();
+
+        for (int cptLignes = 0; cptLignes < nbLigne; cptLignes++){
+            if(equals(g.plateau[cptLignes][0], g.plateau[cptLignes][1], g.plateau[cptLignes][2], idJoueur)){
                 return true;
             }
         }
         //colonne
-        for(int cptColonnes = 0; cptColonnes < plateau.length; cptColonnes++) {
-            if (equals(plateau[0][cptColonnes], plateau[0][cptColonnes],plateau[0][cptColonnes], numJoueur)) {
+        for(int cptColonnes = 0; cptColonnes < nbColonne; cptColonnes++) {
+            if (equals(g.plateau[0][cptColonnes], g.plateau[1][cptColonnes],g.plateau[2][cptColonnes], idJoueur)) {
                 return true;
             }
         }
         // Diagonal
-        if(equals(plateau[0][0], plateau[1][1], plateau[2][2], numJoueur) || equals(plateau[2][0], plateau[1][1], plateau[0][2], numJoueur)){
+        if(equals(g.plateau[0][0], g.plateau[1][1], g.plateau[2][2], idJoueur) || equals(g.plateau[2][0], g.plateau[1][1], g.plateau[0][2], idJoueur)){
             return true;
         }
 
@@ -46,6 +50,98 @@ public class Morpion
 
     }
 
+    // On check les coordonné entrer par le Joueur
+    public boolean checkCoordM(int[] coord) throws CoordonneHorsLimite
+    {
+
+        // Rappel :
+        // coord[0] -> la ligne entrer par User
+        // coord[1] -> la colonne enter par User
+
+
+        // Si les coordonner ne sont pas dans l'interval de la taille de la grille
+        //  alors faux
+        if (!(0 <= coord[0] && coord[0] < g.getNbLigne() || 0 <= coord[1] && coord[1] < g.getNbcol()))
+        {
+
+            return false;
+        }
+        // Verif si la case n'a pas déjà un pion
+        else
+        {
+            return true;
+        }
+
+    }
+
+    public void placement(int[] coord, Joueur j) throws CoordonneHorsLimite, PionDejaPresent
+    {
+        if(!(checkCoordM(coord)))
+        {
+            throw new CoordonneHorsLimite("Vous avez saisie des coordonné invalide : " + coord[0] +" "+ coord[1]);
+        }
+        else
+        {
+            g.saisirVal(coord, j.getidJoueur());
+        }
+    }
+
+
+
+
+    // Grille pour le morpion
+    public void displayGrilleM()
+    {
+
+        System.out.println();
+        System.out.println("________Etat Du Jeu________");
+        System.out.println();
+        System.out.print("    ");
+
+        // Affichage des coordonné des colonnes
+        for (int cptCol = 1; cptCol< g.getNbcol()+1; cptCol++) // le +1 même principe que dans displayGrilleP
+        {
+            System.out.print(" "+cptCol + " ");
+        }
+        System.out.println();
+        System.out.println("   -----------");
+
+
+
+
+        // Début affichage de la grille
+        int cptAffCoordLigne = 1;
+        for (int cptLig = 0; cptLig< g.getNbLigne(); cptLig++)  // cpt = compteur
+        {
+            System.out.print(" " +cptAffCoordLigne +" |");  // <- affichage des coordonné des lignes
+            cptAffCoordLigne++;
+
+            for (int cptCol = 0; cptCol < g.getNbcol(); cptCol++)
+            {
+
+                if (g.plateau[cptLig][cptCol] == 0)
+                {
+                    System.out.print(" - ");
+
+                } else if (g.plateau[cptLig][cptCol] == 1) // 1 = id du joueur1
+                {
+                    System.out.print(" X ");
+                }
+                else if(g.plateau[cptLig][cptCol] == 2) // 2 = id du joueur2
+                {
+                    System.out.print(" O ");
+                }
+            }
+            System.out.print("|");
+            System.out.println();
+
+
+        }
+
+        System.out.println("   -----------");
+        System.out.println();
+
+    }
 
 
 }
