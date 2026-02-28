@@ -1,7 +1,7 @@
 package projet_java.modele;
 
 import java.util.HashMap;
-import java.util.HashMap;
+
 
 
 public class Enregistre

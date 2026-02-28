@@ -32,7 +32,7 @@ public string UserInputNewGame()
 Descption : recup la réponse du Joueur si il veut lancer Une nouvelle partie
 
 ---------------------------------------------Ongoing
-Class Controleur : 
+Class projet_java.Controleur : 
 
 **Attribut** : 
 private Joueur j                 (il a besoin de connaitre les joueur )
@@ -110,7 +110,7 @@ Note 2 : grille aura un constructeur qui prendra en paramettre le nb de ligne et
          à partir de ces valeurs
 (oublie pas qu'on peut faire cela : this.plateau = new int[nbCol][nbLi];) <- on crée directement notre tableau
 
-        - Sous Note 2: Ce sera Controleur qui passera les valeur nb ligne et nb colonne à Grille (Avant les boucles du jeu)
+        - Sous Note 2: Ce sera projet_java.Controleur qui passera les valeur nb ligne et nb colonne à Grille (Avant les boucles du jeu)
         En gros on fera un petit condition qui en fonction du résultat de la méthode : UserInputChoiceGame() dans l'IHM
         Si le choix et morption on crée l'instance de Grille en passant en paramètre : Grille(3,3)
         Sinon on passe en paramètre : Grille(6,7) <- Dimension plateau puissance 4
@@ -157,7 +157,7 @@ Class Enregistrement  :
 
 Description : 
 Stockera les infos des différentes partie dans un Map (**clé** = Nom J; **valeur** = G (gagné)  ou P (perdue) (autre option tu met 1 pour G et 0 pour P comme ça cela évite de stocker des srting)
-Note : Enregistrement communiquera uniquement avec Controleur
+Note : Enregistrement communiquera uniquement avec projet_java.Controleur
 
 **Attribut** : 
 private Map<String, Integer> dico  (un map)

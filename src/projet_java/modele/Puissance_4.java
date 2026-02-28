@@ -70,7 +70,7 @@ public class Puissance_4
     public boolean verifColonne(int Ligne, int Colonne, int identifiant)
     {
         int cpt = 1;  // <- 1 et non 0 car je ne prend pas en compte la case où
-        //  lorsqu'il part dans l'autre sens dans le prog vue que je ne fait que regarder si
+        //  lorsqu'il part dans l'autre sens dans le prog projet_java.vue que je ne fait que regarder si
         // la prochaine case est de la même couleur,
         // donc je dois initialiser le compteur à 1 pour prendre cette case en considération cf shema
 

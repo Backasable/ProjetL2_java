@@ -1,8 +1,6 @@
 package projet_java;
 
-
 import projet_java.modele.Enregistre;
-import projet_java.modele.Jeu;
 import projet_java.modele.Joueur;
 import projet_java.modele.Morpion;
 import projet_java.modele.Puissance_4;
