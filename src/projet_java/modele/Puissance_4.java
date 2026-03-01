@@ -27,14 +27,19 @@ public class Puissance_4 extends Jeu
         int id = j.idJoueur;
 
 
-
-
-
         if(verifLigne(ligne, colonne, id))
         {
             return true;
         }
         else if(verifColonne(ligne, colonne, id))
+        {
+            return true;
+        }
+        else if(verifDiagoDecroissante(ligne, colonne, id))
+        {
+            return true;
+        }
+        else if(verifDiagoCroissante(ligne, colonne, id))
         {
             return true;
         }
@@ -120,11 +125,6 @@ public class Puissance_4 extends Jeu
 
 
 
-
-
-
-
-
     //                                                                       *
     //                                                                       *
     //                                                                       *
@@ -170,6 +170,100 @@ public class Puissance_4 extends Jeu
             }
         }
         return gagne;
+    }
+
+
+    public boolean verifDiagoDecroissante(int Ligne, int Colonne, int identifiant)
+    {
+        int cpt = 1; // cf verifLigne pour expli° du 1
+        int ligne = Ligne;
+        int colonne = Colonne;
+        int id = identifiant;
+        boolean gagne = false;
+
+        // On vérifie d'abord si lorsqu'on fait ligne-1 et colonne-1 on est pas hors limite
+        //   ET
+        // ensuite on verif si le pion de la case au dessus à gauche est de la même couleur
+        while(0<=ligne-1 && ligne-1 <g.getNbLigne() && 0<=colonne-1 && colonne-1 <g.getNbcol()    && g.plateau[ligne-1][colonne-1]==id )
+        {
+            // System.out.println("ligne actuel : "+ligne);
+            ligne--;
+            colonne--;
+            // System.out.println("On va en haut");
+            // System.out.println("On se déplace sur la ligne du haut : "+ligne);
+
+        }
+        // Condition tjr vraie à tester sans ?
+        if (g.plateau[ligne][colonne]==id )
+        {
+            // Pareil ici on vérif d'abord si lorsqu'on fait ligne+1 et colonne + 1 on est pas hors limite
+            //  ET
+            // Ensuite on vérif si la case en dessous a un pion de la même couleur
+            while (0<=ligne+1 && ligne+1 <g.getNbLigne() && 0<=colonne+1 && colonne+1 <g.getNbcol()     &&     g.plateau[ligne+1][colonne+1]==id)
+            {
+                ligne++;
+                colonne++;
+                cpt++;
+                // System.out.println("Dans l'autre sens");
+                // System.out.println("Compteur : "+cpt);
+                // System.out.println("On se déplace sur la ligne du bas : "+ ligne);
+                // System.out.println("On se déplace sur la ligne du bas : "+ colonne);
+                if (cpt == 4)
+                {
+                    gagne = true;
+                    break;
+
+                }
+            }
+        }
+        return gagne;
+
+    }
+
+
+    public boolean verifDiagoCroissante(int Ligne, int Colonne, int identifiant)
+    {
+        int cpt = 1; // cf verifLigne pour expli° du 1
+        int ligne = Ligne;
+        int colonne = Colonne;
+        int id = identifiant;
+        boolean gagne = false;
+
+        // On vérifie d'abord si lorsqu'on fait ligne+1 et colonne+1 on est pas hors limite
+        //   ET
+        // ensuite on verif si le pion de la case au dessus à droite est de la même couleur
+        while(0<=ligne-1 && ligne-1 <g.getNbLigne() && 0<=colonne+1 && colonne+1 <g.getNbcol()    && g.plateau[ligne-1][colonne+1]==id )
+        {
+            // System.out.println("ligne , colonne actuel : "+ligne+ colonne);
+            ligne--;
+            colonne++;
+            // System.out.println("On va en haut à droite");
+            // System.out.println("On se déplace sur la colonne en haut à doite : "+ligne);
+
+        }
+        // Condition tjr vraie à tester sans ?
+        if (g.plateau[ligne][colonne]==id )
+        {
+            // Pareil ici on vérif d'abord si lorsqu'on fait ligne+1 et colonne - 1 on est pas hors limite
+            //  ET
+            // Ensuite on vérif si la case en dessous à gauche a un pion de la même couleur
+            while (0<=ligne+1 && ligne+1 <g.getNbLigne() && 0<=colonne-1 && colonne-1 <g.getNbcol()     &&     g.plateau[ligne+1][colonne-1]==id)
+            {
+                ligne++;
+                colonne--;
+                cpt++;
+                // System.out.println("Dans l'autre sens");
+                // System.out.println("Compteur : "+cpt);
+                // System.out.println("On se déplace sur la ligne colonne du bas à gauche : "+ ligne+ "," + colonne);
+                if (cpt == 4)
+                {
+                    gagne = true;
+                    break;
+
+                }
+            }
+        }
+        return gagne;
 
     }
 
@@ -189,6 +283,7 @@ public class Puissance_4 extends Jeu
             return true;
         }
     }
+
 
     public void recupLigne(int[] colonne, Joueur j) throws ColonneHorsLimite
     {

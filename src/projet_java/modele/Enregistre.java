@@ -76,6 +76,19 @@ public class Enregistre
             return keytab[0]+" avec " + this.dico.get(keytab[0])+ " de partie gagné";
         }
 
+        // Note 1 : avec == Java ne fait pas l'unboxing automatiquement,
+        // il compare les références des objets Integer,
+        // Donc afin d'éviter des problème on cast en int
+
+        else if(((int)this.dico.get(keytab[0]) == (int)this.dico.get(keytab[1])))
+        {
+            return "ex aequo";
+        }
+
+        // Note 1 suite :
+        // contrairement au : == qui s'applique sur les objet,
+        // Le : > ne peut pas s'appliquer sur des objets Java fait donc,
+        // automatiquement l'unboxing (convertit Integer en int) pour pouvoir comparer avec >. Ainsi, on compare bien les valeurs.
         // On gère le cas où les 2 joueur on au moin gagné 1 partie
         else if (this.dico.get(keytab[0]) > this.dico.get(keytab[1]))
         {

@@ -26,8 +26,8 @@ public class IHM {
     public void nameVainqueur(String name)
     {
         System.out.println();
-        if (name == null){
-            System.out.println("Aucun Joueur n'a gagné ! ");
+        if (name.equals("ex aequo")){
+            System.out.println("ex aequo");
         }
         else
         {
@@ -156,8 +156,16 @@ public class IHM {
     public void affichierGagnant(String playerName)
     {
         System.out.println();
-        System.out.println("Félicitation ! "+ playerName+ " vous avez gagné !!!");
-        System.out.println();
+        if (playerName.equals("ex aequo"))
+        {
+            System.out.println("ex aequo");
+        }
+        else
+        {
+            System.out.println("Félicitation ! "+ playerName+ " vous avez gagné !!!");
+            System.out.println();
+        }
+
     }
 
     public void affichageScoreJeu(String[] tableJeuScore)
