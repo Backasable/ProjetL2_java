@@ -1,15 +1,17 @@
 package projet_java.modele;
 
 
+import projet_java.ColonneHorsLimite;
 import projet_java.CoordonneHorsLimite;
 import projet_java.PionDejaPresent;
+import projet_java.modele.Jeu;
 
-public class Morpion
+public class Morpion extends Jeu
 {
-    public Grille g;
-    public Morpion()
+
+    public Morpion(int nbligne, int nbcolonne)
     {
-        this.g = new Grille(3,3);
+        super(nbligne,nbcolonne);
     }
 
 
@@ -74,7 +76,7 @@ public class Morpion
 
     }
 
-    public void placement(int[] coord, Joueur j) throws CoordonneHorsLimite, PionDejaPresent
+    public void placement(int[] coord, Joueur j) throws PionDejaPresent, CoordonneHorsLimite, ColonneHorsLimite
     {
         if(!(checkCoordM(coord)))
         {
@@ -140,6 +142,49 @@ public class Morpion
 
         System.out.println("   -----------");
         System.out.println();
+
+    }
+    // Même principe que pour displayGrilleM dans Puissance_4
+    // Affiche la grille pour le Puissance 4
+    public void displayGrilleP()
+    {
+        System.out.println();
+        System.out.println("******** Etat Du Jeu *******");
+        System.out.println();
+        System.out.print(" ");
+        for (int cptCol = 1; cptCol< g.getNbcol()+1; cptCol++) // Le +1 car pour rappel on veut afficher des coordonné entre 1 et 7 et comme getNbcol = 7 (vu que java commence à compter de 0) on aura jusqu'à 6 et pas 7
+        {
+            System.out.print(" "+ cptCol + " ");
+        }
+        System.out.println();
+
+        System.out.println("-----------------------");  // <- On dessine la ligne du haut du Puiss 4
+
+        // Début affichage du plateau
+        for (int cptLig = 0; cptLig< g.getNbLigne(); cptLig++)  // cpt = compteur
+        {
+
+            System.out.print("|");
+            for (int cptCol = 0; cptCol < g.getNbcol(); cptCol++)
+            {
+
+                if (g.plateau[cptLig][cptCol] == 0)
+                {
+                    System.out.print(" - ");
+
+                } else if (g.plateau[cptLig][cptCol] == 1) // 1 = id du joueur1
+                {
+                    System.out.print(" J "); // pion Jaune
+                }
+                else if(g.plateau[cptLig][cptCol] == 2) // 2 = id du joueur2
+                {
+                    System.out.print(" R "); // pion Rouge
+                }
+            }
+            System.out.print("|");
+            System.out.println();
+        }
+        System.out.println("-----------------------"); // <- dessine la ligne de la grille du bas
 
     }
 

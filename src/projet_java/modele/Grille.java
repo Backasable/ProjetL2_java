@@ -46,6 +46,22 @@ public class Grille
         return true;
     }
 
+    // Vide la grille peu import si c'est une grille Puissance_4 ou Morpion
+    public void clearGrille()
+    {
+        for (int cptLig = 0; cptLig < nbLigne; cptLig++)  // cpt = compteur
+        {
+            for (int cptCol = 0; cptCol < nbColonne; cptCol++) {
+                // Si on trouve une colonne qui n'est vide alors on la met à vide
+                if (this.plateau[cptLig][cptCol] != 0) {
+                    this.plateau[cptLig][cptCol] = 0;
+                }
+
+            }
+        }
+
+    }
+
     // Saisir les val pour le Morpion dans le tableau
     // Note :
     // coord[0] -> la ligne entrer par User

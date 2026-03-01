@@ -1,17 +1,18 @@
 package projet_java.modele;
 
 import projet_java.ColonneHorsLimite;
+import projet_java.CoordonneHorsLimite;
 import projet_java.PionDejaPresent;
+import projet_java.modele.Jeu;
 
-public class Puissance_4
+public class Puissance_4 extends Jeu
 {
-    public Grille g;
 
 
-    public Puissance_4()
+    public Puissance_4(int nbligne, int nbcolonne)
     {
 
-        this.g = new Grille(6,7);
+        super(nbligne,nbcolonne);
 
     }
 
@@ -173,24 +174,40 @@ public class Puissance_4
     }
 
 
-
-
-
-
-
-    // On détermine l'emplacement de la case où va se trouver le pion
-    public void placement(int colonne, Joueur j)  throws PionDejaPresent, ColonneHorsLimite
+    public boolean verifcoloneCoord(int colonne) throws ColonneHorsLimite
     {
+        // On vérifie:
+        // Si la colonne saisie, n'est pas dans l'interval de la taille du tableau
+        // et si c'est le cas, on lève une exception
 
-        // On vérifie déjà :
-        // Si la colonne saisi, n'est pas dans l'interval de la taille du tabbleau
-        // ALord on lève une exception
         if( !(0<= colonne && colonne < g.getNbcol()) )
         {
             throw new ColonneHorsLimite("La colonne saisi est hors de porté : "+ colonne);
         }
         else
         {
+            return true;
+        }
+    }
+
+    public void recupLigne(int[] colonne, Joueur j) throws ColonneHorsLimite
+    {
+        int col = colonne[1];  // car colonne[0] c'est sensé être la ligne mais par défaut elle est à zero car l'utilisateur n'a rentré que la colonne dans l'IHM
+        if (verifcoloneCoord(col))
+        {
+           j.setcaseTrouverCoord(g.findCaseVide(col));  // rappel, findCaseVide te renvoie les coordonnées de la case où est tombé le pion (en fct de la colonne) donc il te renvoie la ligne
+        }
+        // Si c'est faux ça lance une exception donc c'est bon !
+
+    }
+
+    // On détermine l'emplacement de la case où va se trouver le pion
+    public void placement(int[] colonne, Joueur j)  throws PionDejaPresent, ColonneHorsLimite, CoordonneHorsLimite
+    {
+        // Je vais d'abord dans recupLigne faire l'action d'aller trouver la ligne où le pion est trouver
+        recupLigne(colonne, j);
+
+
             // On récupère les coordonné de la case où le pion qu'a joué le joueur est tombé
             // Pourquoi j'ai mis caseTrouverCoord dans Joueur au lieu de le mettre dans le Puissance_4
             // Tout simplement car si un autre joueur saisi une valeur
@@ -202,9 +219,9 @@ public class Puissance_4
             // Mais la vrai  raison, c'est que :
             // au début comme je pensais qu'il me fallait une première exécution afin de récup la val de caseTrouverCoord sans condition, le do while me parraisser mieux
 
-            j.setcaseTrouverCoord(g.findCaseVide(colonne));
+
             g.saisirVal(j.getcaseTrouverCoord(), j.getidJoueur());
-        }
+
     }
 
 
@@ -221,7 +238,7 @@ public class Puissance_4
         System.out.println("******** Etat Du Jeu *******");
         System.out.println();
         System.out.print(" ");
-        for (int cptCol = 1; cptCol< g.getNbcol()+1; cptCol++) // Le +1 car pour rappel on veut afficher des coordonné entre 1 et 7 et comme getNbcol = 7 on aura jusqu'à 6 et pas 7
+        for (int cptCol = 1; cptCol< g.getNbcol()+1; cptCol++) // Le +1 car pour rappel on veut afficher des coordonné entre 1 et 7 et comme getNbcol = 7 (vu que java commence à compter de 0) on aura jusqu'à 6 et pas 7
         {
             System.out.print(" "+ cptCol + " ");
         }
@@ -256,4 +273,63 @@ public class Puissance_4
         System.out.println("-----------------------"); // <- dessine la ligne de la grille du bas
 
     }
+
+
+    // J'ai pas le choix que de la mettre là afin de pouvoir appliquer le polymorphisme car si je l'ai mettais dans l'IHM, sa implique que l'IHM connaisse Grille donc le modème sauf que on est dans un MVC et c'est non !
+    // Grille pour le morpion
+    public void displayGrilleM()
+    {
+
+        System.out.println();
+        System.out.println("________Etat Du Jeu________");
+        System.out.println();
+        System.out.print("    ");
+
+        // Affichage des coordonné des colonnes
+        for (int cptCol = 1; cptCol< g.getNbcol()+1; cptCol++) // le +1 même principe que dans displayGrilleP
+        {
+            System.out.print(" "+cptCol + " ");
+        }
+        System.out.println();
+        System.out.println("   -----------");
+
+
+
+
+        // Début affichage de la grille
+        int cptAffCoordLigne = 1;
+        for (int cptLig = 0; cptLig< g.getNbLigne(); cptLig++)  // cpt = compteur
+        {
+            System.out.print(" " +cptAffCoordLigne +" |");  // <- affichage des coordonné des lignes
+            cptAffCoordLigne++;
+
+            for (int cptCol = 0; cptCol < g.getNbcol(); cptCol++)
+            {
+
+                if (g.plateau[cptLig][cptCol] == 0)
+                {
+                    System.out.print(" - ");
+
+                } else if (g.plateau[cptLig][cptCol] == 1) // 1 = id du joueur1
+                {
+                    System.out.print(" X ");
+                }
+                else if(g.plateau[cptLig][cptCol] == 2) // 2 = id du joueur2
+                {
+                    System.out.print(" O ");
+                }
+            }
+            System.out.print("|");
+            System.out.println();
+
+
+        }
+
+        System.out.println("   -----------");
+        System.out.println();
+
+    }
+
+
 }
+
