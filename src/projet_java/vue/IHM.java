@@ -31,7 +31,7 @@ public class IHM {
         }
         else
         {
-            System.out.println(name+ " a gagné le plus de partie");
+            System.out.println(name+ " a gagné le plus de partie.\nFélicitation vous avez Battue votre adversaire !!!");
         }
 
     }
@@ -158,6 +158,22 @@ public class IHM {
         System.out.println();
         System.out.println("Félicitation ! "+ playerName+ " vous avez gagné !!!");
         System.out.println();
+    }
+
+    public void affichageScoreJeu(String[] tableJeuScore)
+    {
+        System.out.println(); // <- pour laisser un espace après ce qui a été afficher avant
+
+        // Tant qu'on n'a pas afficher tout les element du tableau incrémente le cpt
+        // c'est plus jolie car au début je partais du principe que tableJeuScore avait 2 element vu qu'il y a 2 joueur mais admétons que les 2 joueurs décide de jouer qu'une seul partie est Enregistre ne va qu'ajouter le vainquer donc la taille de hashMap sera de 1 donc on aura un souci de taille vue que cette méthode là reçois un tableau qui représente l'état du HashMap donc si on veut afficher les 2 joueurs mais que le tab sa taille c'est 1 bah c'est mort
+        // là on affiche peut import la taille du tableau donc on a en plus une sécurité pour eviter l'erreur index out of bound ou un truc comme cela
+        int cpt = 0;
+        while(cpt < tableJeuScore.length)
+        {
+            System.out.println(tableJeuScore[cpt]);
+            cpt++;
+        }
+
     }
 
 }

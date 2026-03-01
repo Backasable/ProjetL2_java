@@ -37,6 +37,7 @@ public class Controleur {
             jeu.g.clearGrille();
 
         }
+        ihm.affichageScoreJeu(save.affichMap());
         ihm.nameVainqueur(save.CalculerVainqueur());
 
     }

@@ -1,6 +1,8 @@
 package projet_java.modele;
 
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 
 
@@ -15,7 +17,12 @@ public class Enregistre
 
     public void ajouterRes(String PlayerName)
     {
-        if (this.dico.containsKey(PlayerName))
+        // On ignore si le resultat de loopGame est ex eaquo
+        if (PlayerName.equals("ex aequo"))
+        {
+            return;
+        }
+        else if (this.dico.containsKey(PlayerName))
         {
             dico.put(PlayerName,dico.get(PlayerName)+1);
         }
@@ -24,6 +31,23 @@ public class Enregistre
             this.dico.put(PlayerName, 1);
         }
     }
+
+    // Permet de regrouper dans un tableau où la valeur d'une colonne est une String : PlayerName | partie gagné : valeur
+    public String[] affichMap()
+    {
+        int cpt = 0;
+        String[] j_resGame = new String[this.dico.size()];
+
+        for (Map.Entry<String, Integer> entry : this.dico.entrySet()) {
+            String cle = entry.getKey();
+            Integer valeur = entry.getValue();
+            j_resGame[cpt] = cle+" | Partie gagné : " +valeur;
+            cpt++;
+
+        }
+        return j_resGame;
+    }
+
 
     public String CalculerVainqueur()
     {
@@ -49,17 +73,17 @@ public class Enregistre
         // On gère le cas où : 1 joueur à gagné tout les parties
         else if (keytab.length == 1)
         {
-            return keytab[0];
+            return keytab[0]+" avec " + this.dico.get(keytab[0])+ " de partie gagné";
         }
 
         // On gère le cas où les 2 joueur on au moin gagné 1 partie
         else if (this.dico.get(keytab[0]) > this.dico.get(keytab[1]))
         {
-            return keytab[0];
+            return keytab[0]+ "avec " + this.dico.get(keytab[0])+ " de partie gagné";
         }
         else
         {
-            return keytab[1];
+            return keytab[1] + "avec " +this.dico.get(keytab[1]+ " de partie gagné");
         }
     }
 }
