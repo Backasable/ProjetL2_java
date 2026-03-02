@@ -68,13 +68,13 @@ Comme cela on peut manipuler grille sans avoir à passer par une methode pour la
 ---------------------------------------------Competed
 class Joueur
 **Attribut**:
-private string PlayerName
-private int idJoueur
-private static int cptJoueur
+public String nom;
+public int idJoueur;
+public static int cptJoueur = 1;
+private int[] caseTrouverCoord;
 
 **Méthode**
-getplayerName
-getidJoueur
+
 
 Pourquoi avoir fait un identifiant ? 
 Car quand j'ai voulut coder la class Morpion je me suis aperçus qu'il me manquer une information 
@@ -91,7 +91,16 @@ Si on nous demande lors de la prochaine itération que le joueur choisisse son p
 qui associe l'identifant du joueur au pion selon le choix entré par le Joueur 
 
 
+public int  getidJoueur()
 
+
+public String getNom()
+
+
+public int[] getcaseTrouverCoord()
+
+public void setcaseTrouverCoord(int[] caseFind)
+ 
 
 
 ---------------------------------------------Competed
@@ -118,32 +127,27 @@ Note 2 : grille aura un constructeur qui prendra en paramettre le nb de ligne et
 
 **Méthode**
 
+public int getNbcol()
 
+public int getNbLigne()
+   
+    
 public void clearGrille()
 Description : 
 Rénitialise la grille à chaque nouvelle partie
 
-public void displayGrille()
-Description : Affichera l'état de la grille donc tu aura une 2 boucle qui parcouront le tableau et afficheront les valeur sous la forme d'un plateau
+
+public void SaisirVal(int [] coord, int idJoueur) throws PionDejaPresent
 
 
-Note on fait 2 methode display 
-displayGrilleM pour le morpion
-displayGrilleP pour le puissance4
 
-public void SaisirVal(int l, in c, int idjoueur) <- idjoueur = 1 pour le joueur1 et 2 pour le joueur2 puis au coordonné indiquer, on mettra l'idjoueur 
-Description : 
-Ecrit les valeur dans 
 
-public boolean checkCoordM(int[] coord)
-Description : 
-Vérifie si les coordonnés sont valide 
+public checkGrillefull(int colonne)
+Description : vérif si la colonne la grille est plein
 
-************Méthode de la grille pour le puissance 4************
-public boolean checkCood(int colonne)
-Description : vérif si la colonne saisi est valide 
+ 
 
-public int[] findCaseVide()
+public int[] findCaseVide(int col)
 // -> Cette méthode est la stratégie pour : 
 // Simuler que le pion déscende jusqu'à avoir touché
 // le pion de la case d'en dessous :
@@ -186,9 +190,15 @@ Mais Enregistrement n'aura pas à connaitre de class
 public void ajouterRes(string PlayerName, int Resultat)  (PS: 1 indiquera Gagné et 0 indiquera Perdu
 Description : ajoute la pair clé (PlayerName) valeur (Résultat) dans dico
 
+
+public String[] affichMap()
+Description : // Permet de regrouper dans un tableau où la valeur
+d'une colonne est une String : PlayerName | partie gagné : valeur
+
 public string CalculerVainqueur()
 Description : Va renvoyer le nom du joueur qui a remporter le plus de partie 
               donc elle ira chercher dans le map le joueur ayant le plus de 1 avec une boucle etc tu sais faire 
+
 
 
 
@@ -200,9 +210,7 @@ Une class abstract mère: Jeu
 Et comme elle est abstraite on aura pas à les implémenter mtn)
 
 **Attribut**
-private Grille plateau 
-private Joueur j1
-private Joueur j2
+public Grille g;
 
 
 **Méthode à implémenter dans les class enfant : Morpion et Puissance 4**
@@ -211,6 +219,20 @@ public boolean win()   <- Note : les paramètres dépendront du jeu (Si Morpion 
 Description : 
 Vérif si un joueur a gagné et renvoie True si G ou false si non 
 Note : à voir si dans les paramètres on met aussi l'id du joueur comme ça on sait qui a gagné 
+
+-ENL7VE L'ANCIEN DESCRIPTION de boolean win?
+
+public abstract boolean win(Joueur j);
+Description :
+Vérif si un joueur a gagné et renvoie True si G ou false si non
+
+public abstract void placement(int[] coord, Joueur j) throws PionDejaPresent, ColonneHorsLimite, CoordonneHorsLimite;
+Decription :
+public abstract void displayGrilleP();
+Description : 
+
+public abstract void displayGrilleM();
+Description :
 
 
 -------------------------------------------------------Ongoing
@@ -241,6 +263,32 @@ Détaillent les conditions de victoire Du Morpion
                                                                                   x  
 - Même principe pour la diagonal, au morpion tu en as 2 donc tu vérif les 2 avec une cond
 
+**ENLEVE BOOLEAN WIN (case1.....)?
+public boolean win(Joueur j)
+Description: 
+
+
+public boolean equals(int entier1, int entier2, int entier3, int idJoueur)
+Description :
+
+
+public boolean checkCoordM(int[] coord) throws CoordonneHorsLimite
+Description : Vérifie si les coordonnés sont valide
+
+
+public void placement(int[] coord, Joueur j) throws PionDejaPresent, CoordonneHorsLimite, ColonneHorsLimite
+Description : 
+
+
+public void displayGrilleM()
+Description :
+affiche la Grille pour le morpion
+
+
+public void displayGrilleP()
+Decription :
+Même principe que pour displayGrilleM dans Puissance_4
+Affiche la grille pour le Puissance 4
 
 (
 VerifCoord(int l, int c)  (l=ligne, c=colonne)
@@ -258,6 +306,73 @@ faudra aller chercher les info de la grille dans la class Grille et c'est fatigu
 -------------------------------------------------------Ongoing
 Class enfant Puissance 4 (hérite jeu)
 
+
+**Methode**
+
+
+public boolean win(Joueur j)
+Description :
+
+
+
+public boolean verifColonne(int Ligne, int Colonne, int identifiant)
+Description :  
+On vérifie si on a un alignement : * * * *  de 4 pions de même couleur sur les colonnes
+
+
+public boolean verifLigne(int Ligne, int Colonne, int identifiant)
+Description : 
+On vérif tout les ligne si y'a un alignement de 4 pions de comme ça : *
+
+
+public boolean verifDiagoDecroissante(int Ligne, int Colonne, int identifiant)
+Description : 
+On vérif tout les diagonal décroissante si il y a un alignement de 4 pions de ça : *
+// On vérifie d'abord si lorsqu'on fait ligne-1 et colonne-1 on est pas hors limite
+//   ET
+// ensuite on verif si le pion de la case au dessus à gauche est de la même couleur
+
+
+public boolean verifDiagoCroissante(int Ligne, int Colonne, int identifiant)
+Description :
+On vérif tout les diagonal croissante si il y a un alignement de 4 pions de ça : *
+// On vérifie d'abord si lorsqu'on fait ligne+1 et colonne+1 on est pas hors limite
+//   ET
+// ensuite on verif si le pion de la case au dessus à droite est de la même couleur
+
+
+public boolean verifcoloneCoord(int colonne) throws ColonneHorsLimite
+Description:
+On vérifie Si la colonne saisie, n'est pas dans l'interval de la taille du tableau 
+et si c'est le cas, on lève une exception
+
+public void recupLigne(int[] colonne, Joueur j) throws ColonneHorsLimite
+Description:
+int col = colonne[1];  <- car colonne[0] c'est sensé être la ligne mais
+par défaut elle est à zero car l'utilisateur n'a rentré que la colonne dans l'IHM
+
+
+
+public void placement(int[] colonne, Joueur j)
+Description :
+On détermine l'emplacement de la case où va se trouver le pion
+recupLigne(colonne, j) <- On récupère les coordonné de la case où le pion qu'a joué le joueur est tombé
+
+
+
+public void displayGrilleP()
+Description:
+Affiche la grille pour le Puissance 4
+for (int cptCol = 1; cptCol< g.getNbcol()+1; cptCol++)   <-  Le +1 car pour rappel on veut afficher
+des coordonné entre 1 et 7 et comme getNbcol = 7 (vu que java commence à compter de 0) on aura jusqu'à 6 et pas 7
+
+
+
+public void displayGrilleM()
+Description :
+affiche la Grille pour le morpion
+Note: J'ai pas le choix que de la mettre là afin de pouvoir appliquer le polymorphisme car si je l'ai mettais 
+dans l'IHM, sa implique que l'IHM connaisse Grille donc le modème sauf que on est dans un MVC et c'est non !
 
 
 
