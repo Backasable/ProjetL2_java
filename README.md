@@ -348,7 +348,7 @@ et si c'est le cas, on lève une exception
 
 public void recupLigne(int[] colonne, Joueur j) throws ColonneHorsLimite
 Description:
-int col = colonne[1];  <- car colonne[0] c'est sensé être la ligne mais
+int col = colonne[1];  <- Pk ? colonne[1] et pas colonne[0], car colonne[0] c'est sensé être la ligne mais
 par défaut elle est à zero car l'utilisateur n'a rentré que la colonne dans l'IHM
 
 
