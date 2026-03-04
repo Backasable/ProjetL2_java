@@ -19,9 +19,6 @@ public abstract class Jeu
 
     public abstract void placement(int[] coord, Joueur j) throws PionDejaPresent, ColonneHorsLimite, CoordonneHorsLimite;
 
-    public abstract void displayGrilleP();
-
-    public abstract void displayGrilleM();
 
 
 

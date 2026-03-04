@@ -85,16 +85,16 @@ public class Controleur {
         while (!(coupValid)) {
             try {
                 if (jeu instanceof Puissance_4) {
-                    jeu.displayGrilleP();
+                    ihm.displayGrilleP(jeu.g);
                     int[] user = ihm.userInputGame(jeu, j.nom);
                     jeu.placement(user, j);
-                    jeu.displayGrilleP();
+                    ihm.displayGrilleP(jeu.g);
                     coupValid = true;
                 } else if (jeu instanceof Morpion) {
-                    jeu.displayGrilleM();
+                    ihm.displayGrilleM(jeu.g);
                     int[] user = ihm.userInputGame(jeu, j.nom);
                     jeu.placement(user, j);
-                    jeu.displayGrilleM();
+                    ihm.displayGrilleM(jeu.g);
                     coupValid = true;
                 }
 
