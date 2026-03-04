@@ -276,7 +276,7 @@ public class Puissance_4 extends Jeu
 
         if( !(0<= colonne && colonne < g.getNbcol()) )
         {
-            throw new ColonneHorsLimite("La colonne saisi est hors de porté : "+ colonne);
+            throw new ColonneHorsLimite("La colonne saisi est hors de porté : "+ colonne + 1); // +1 car rappel la prof veut des coordonné entre 1 et 7 sauf qu'en java on commence à 0
         }
         else
         {

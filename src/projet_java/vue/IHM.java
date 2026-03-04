@@ -122,8 +122,10 @@ public class IHM {
                 return choix;
 
             }
+            // Si on est pas entrer dans la condition ça veut dire que user a entrer un choix incorrect donc on lui affiche un message
+            System.out.println("Veuillez entrer un choix correct");
         }
-        return 0;
+        return 0;  // <- Ce return 0 est obligatoire car Java exige qu'une méthode retourne un int sur tous les chemins possibles. Même si la boucle gère tout en interne, Java ne peut pas garantir qu'on n'en sortira jamais — il veut donc un return de secours au cas où
     }
 
     // Description : récup nom Joueur
