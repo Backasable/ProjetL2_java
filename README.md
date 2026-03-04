@@ -372,7 +372,7 @@ public void displayGrilleM()
 Description :
 affiche la Grille pour le morpion
 Note: J'ai pas le choix que de la mettre là afin de pouvoir appliquer le polymorphisme car si je l'ai mettais 
-dans l'IHM, sa implique que l'IHM connaisse Grille donc le modème sauf que on est dans un MVC et c'est non !
+dans l'IHM, sa implique que l'IHM connaisse Grille donc le modèle sauf que on est dans un MVC et c'est non !
 
 
 
