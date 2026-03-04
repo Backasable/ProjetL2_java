@@ -74,8 +74,6 @@ public class IHM {
         // je n'ai pas de condition qui vérifi si il a bien saisi 2 coordonnées SOS (mais ça devrais passer)
         int[] coordonnees = new int[2];
 
-        System.out.print("(Exemple de saisi :1 3)\nEntrer les coordonnées de la case :  ");
-
         int cpt=0;
         int user = 0;
 
@@ -83,13 +81,16 @@ public class IHM {
         {
             try
             {
+                System.out.print("(Exemple de saisi :1 3)\nEntrer les coordonnées de la case :  ");
                 user=sc.nextInt();
                 coordonnees[cpt]=user;
                 cpt++;
             }
             catch(InputMismatchException e)
             {
+                System.out.println("Veuillez saisir des coordonnés valide (pour ma santé mental) ");
                 sc.next();
+
             }
         }
 
@@ -153,11 +154,16 @@ public class IHM {
             }
             else
             {
-                System.out.println("Veuillez saisir :y ou n !!!");
+                System.out.println("\n Veuillez saisir :y ou n !!!");
             }
 
         }
         return "erreur innatandue";
+    }
+
+    public void aucunePartiegagne()
+    {
+        System.out.println("Aucun joueur n'a gagné ");
     }
 
 

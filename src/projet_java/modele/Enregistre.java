@@ -36,6 +36,8 @@ public class Enregistre
     public String[] affichMap()
     {
         int cpt = 0;
+
+
         String[] j_resGame = new String[this.dico.size()];
 
         for (Map.Entry<String, Integer> entry : this.dico.entrySet()) {

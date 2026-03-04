@@ -45,8 +45,15 @@ public class Controleur {
             ihm.aucunePartieJouer();
             return;  // <- le return pour mettre fin au programme
         }
-        ihm.affichageScoreJeu(save.affichMap());
-        ihm.nameVainqueur(save.CalculerVainqueur());
+        else if(save.affichMap().length == 0)
+        {
+            ihm.aucunePartiegagne();
+        }
+        else
+        {
+            ihm.affichageScoreJeu(save.affichMap());
+            ihm.nameVainqueur(save.CalculerVainqueur());
+        }
 
     }
 
@@ -127,6 +134,7 @@ public class Controleur {
     public static String loopGame(Jeu jeu, IHM ihm, Joueur j1, Joueur j2) {
         boolean vainqueur = false;
         do {
+
             entrerCoup(jeu, ihm, j1);
 
             if (jeu.win(j1)) {
@@ -135,6 +143,13 @@ public class Controleur {
                 return j1.nom;
             }
 
+            if (jeu.g.checkGrillefull())
+            {
+                vainqueur = true; // <- optionnel mais pour que ce soit joli je le met
+                return "ex aequo";
+            }
+
+
             entrerCoup(jeu, ihm, j2);
 
             if (jeu.win(j2)) {
@@ -142,11 +157,11 @@ public class Controleur {
                 return j2.nom;
             }
 
+
             // Tant qu'on ne trouve pas de vainqueur ou que le grille de jeu n'est pas pleine on boucle
-        } while (!(vainqueur || jeu.g.checkGrillefull()));
+        } while (!(vainqueur));
 
-        return "ex aequo";
-
+        return "Erreur innatendue Controleur -> meth :loopGame ";  // <- On met ce return pour les mêmes raison que la méthode userInputChoiceGame dans la class IHM
     }
 
 
