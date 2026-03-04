@@ -17,7 +17,7 @@ public class Controleur {
 
     public void lancerJeu() {
 
-        Joueur[] tabJoueur = debJeu(ihm);
+        Joueur[] tabJoueur = creationJoueur(ihm);
         Joueur j1 = tabJoueur[0];
         Joueur j2 = tabJoueur[1];
 
@@ -27,15 +27,23 @@ public class Controleur {
         int choicePlayerG = ihm.UserInputChoiceGame();
         Jeu jeu = creationJeu(choicePlayerG);
 
+        int cptNbPartie = 0;
+
 
         while (newGame(ihm)) {
 
-
+            cptNbPartie++;
             String res = loopGame(jeu, ihm, j1, j2);
             save.ajouterRes(res);
             ihm.affichierGagnant(res);
             jeu.g.clearGrille();
 
+        }
+
+        if (cptNbPartie ==0 )
+        {
+            ihm.aucunePartieJouer();
+            return;  // <- le return pour mettre fin au programme
         }
         ihm.affichageScoreJeu(save.affichMap());
         ihm.nameVainqueur(save.CalculerVainqueur());
@@ -64,7 +72,7 @@ public class Controleur {
 // Fonction Pour le tout début :
 
 
-    public Joueur[] debJeu(IHM ihm) {
+    public Joueur[] creationJoueur(IHM ihm) {
         ihm.acceuil();
         Joueur[] tabJoueur = new Joueur[2];
 
@@ -101,10 +109,13 @@ public class Controleur {
 
             } catch (ColonneHorsLimite e) {
                 System.out.println(e.getMessage());
+                int[] user = ihm.userInputGame(jeu, j.nom);
             } catch (PionDejaPresent e) {
                 System.out.println(e.getMessage());
+                int[] user = ihm.userInputGame(jeu, j.nom);
             } catch (CoordonneHorsLimite e) {
                 System.out.println(e.getMessage());
+                int[] user = ihm.userInputGame(jeu, j.nom);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }

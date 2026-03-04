@@ -24,6 +24,11 @@ public class IHM {
         System.out.println();
     }
 
+    public void aucunePartieJouer()
+    {
+        System.out.println("Vous avez joué aucune partie mais nous vous attendrons pour une prochaine game ");
+    }
+
     public void nameVainqueur(String name)
     {
         System.out.println();

@@ -68,7 +68,6 @@ public class Morpion extends Jeu
 
             return false;
         }
-        // Verif si la case n'a pas déjà un pion
         else
         {
             return true;

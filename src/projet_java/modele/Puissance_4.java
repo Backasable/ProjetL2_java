@@ -308,11 +308,11 @@ public class Puissance_4 extends Jeu
             // Tout simplement car si un autre joueur saisi une valeur
             // i.e que si je met : entrerCoup(j1) et à la suite, entrerCoup(j2)
             // La valeur de caseTrouverCoord pour j1 sera écrasé par celle de j2
-            // Donc chacun aura sa variabe caseTrouverCoord qui sera d'abord initialisé à null avant le deb de la game
+            // Donc chacun aura sa variable caseTrouverCoord qui sera d'abord initialisé à null avant le deb de la game
             // Et dans la boucle :  do while, le do permettra d'exécuter une première fois le programme et de récup la val de caseTrouverCoord
             // après j'aurais pus faire un while mais pour le fun on est aller sur un do while
             // Mais la vrai  raison, c'est que :
-            // au début comme je pensais qu'il me fallait une première exécution afin de récup la val de caseTrouverCoord sans condition, le do while me parraisser mieux
+            // au début comme je pensais qu'il me fallait une première exécution afin de récup la val de caseTrouverCoord sans condition, le do while me parraissait mieux
 
 
             g.saisirVal(j.getcaseTrouverCoord(), j.getidJoueur());

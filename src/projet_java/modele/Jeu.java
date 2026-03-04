@@ -10,6 +10,7 @@ public abstract class Jeu
 
     public Grille g;
 
+
     public Jeu(int nbLigne, int nbColonne)
     {
         this.g = new Grille(nbLigne,nbColonne);
