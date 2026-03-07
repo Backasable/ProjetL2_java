@@ -3,6 +3,7 @@ import projet_java.modele.Grille;
 import projet_java.modele.Jeu;
 import projet_java.modele.Puissance_4;
 import projet_java.CoordonneInvalide;
+import projet_java.ChoiceGameException;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -110,7 +111,8 @@ public class IHM {
                 System.out.print("(Exemple de saisi :1 3)\nEntrer les coordonnées de la case :  ");
                 user=sc.nextLine();
 
-                if (user.length() !=3 || Character.isLetter(user.charAt(0)) || Character.isLetter(user.charAt(2)))
+                // On regarde si ce qu'a entré user ne dépace pas 3 de longueur et si c'est bien un chiffre si c'est pas le cas alors :
+                if ( user.length() !=3 || !(Character.isDigit((user.charAt(0)))) || !(Character.isDigit((user.charAt(1)))) )
                 {
                     throw new CoordonneInvalide("Veulliez Saisir des coordonnées Valide !");
                 }
@@ -145,26 +147,41 @@ public class IHM {
 
     public int UserInputChoiceGame() {
         boolean valide = false;
+
         while(!(valide))
         {
             System.out.println();
             System.out.print("        1: Puissance 4 !\n        2: Morpion !\n\nChoisissez un mode de jeu : ");
-            int choix = sc.nextInt();
-            sc.nextLine();  // <- consomme le \n résiduel de userInputNewGame
-// Note : Ce qui causait le bug où le prog n'arriver pas à lire ce qu'a saisi l'user lors de la première itération de la boucle (dans la methode userInputNewGame()) c'état un \n qui été causé lorsque user en appuyait sur Entrée après avoir tapé 1 ou 2. nextInt() lit uniquement le chiffre et laisse ce \n d'Entrée dans le buffer. C'est ce \n que sc.nextLine() vient consommer.
-            System.out.println();
-
-            if(choix == 1 || choix == 2)
+            String user = sc.nextLine();
+            try
             {
-                valide = true;
-                return choix;
+                // On vérif si ce qu'a saisi user est bien un chiffre
+                if (user.length() != 1 || !(Character.isDigit((user.charAt(0)))) )
+                {
+                    throw new ChoiceGameException("Veuillez saisir une choix valide ");
+                }
 
+                int choix  = Integer.parseInt(user);
+
+                // On vérif si ce chiffre n'est pas différent de 1 et 2
+                if (choix != 1 && choix != 2) {
+                    throw new ChoiceGameException("Veuillez saisir une choix valide ");
+
+                }
+                // Ce le prog arrive ici ça veut dire que user a rentré un choix valide
+                else
+                {
+                    return choix;
+                }
             }
-            // Si on est pas entrer dans la condition ça veut dire que user a entrer un choix incorrect donc on lui affiche un message
-            System.out.println("Veuillez entrer un choix correct");
+            catch(ChoiceGameException e)
+            {
+                System.out.println(e.getMessage());
+            }
         }
         return 0;  // <- Ce return 0 est obligatoire car Java exige qu'une méthode retourne un int sur tous les chemins possibles. Même si la boucle gère tout en interne, Java ne peut pas garantir qu'on n'en sortira jamais — il veut donc un return de secours au cas où
     }
+
 
     // Description : récup nom Joueur
     public String UserInputName() {
