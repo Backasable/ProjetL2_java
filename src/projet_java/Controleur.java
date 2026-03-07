@@ -11,8 +11,10 @@ import projet_java.vue.IHM;
 public class Controleur {
     private IHM ihm;
 
-    public Controleur(IHM ihm) {
+    public Controleur(IHM ihm)
+    {
         this.ihm = new IHM();
+
     }
 
     public void lancerJeu() {

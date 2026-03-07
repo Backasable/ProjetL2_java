@@ -43,6 +43,9 @@ public class IHM {
         }
 
     }
+
+
+
     public int[] userInputGame(Jeu jeu, String playerName)
     {
         if (jeu instanceof Puissance_4)
@@ -112,7 +115,7 @@ public class IHM {
                 user=sc.nextLine();
 
                 // On regarde si ce qu'a entré user ne dépace pas 3 de longueur et si c'est bien un chiffre si c'est pas le cas alors :
-                if ( user.length() !=3 || !(Character.isDigit((user.charAt(0)))) || !(Character.isDigit((user.charAt(1)))) )
+                if ( user.length() !=3 || !(Character.isDigit((user.charAt(0)))) || !(Character.isDigit((user.charAt(2)))) )
                 {
                     throw new CoordonneInvalide("Veulliez Saisir des coordonnées Valide !");
                 }
