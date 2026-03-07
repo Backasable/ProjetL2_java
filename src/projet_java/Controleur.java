@@ -10,10 +10,15 @@ import projet_java.vue.IHM;
 
 public class Controleur {
     private IHM ihm;
+    private Enregistre save;
+
 
     public Controleur(IHM ihm)
     {
         this.ihm = new IHM();
+        this.save = new Enregistre();
+
+
 
     }
 
@@ -23,7 +28,7 @@ public class Controleur {
         Joueur j1 = tabJoueur[0];
         Joueur j2 = tabJoueur[1];
 
-        Enregistre save = new Enregistre();
+
 
 
         int choicePlayerG = ihm.UserInputChoiceGame();
