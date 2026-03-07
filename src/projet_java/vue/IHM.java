@@ -2,6 +2,7 @@ package projet_java.vue;
 import projet_java.modele.Grille;
 import projet_java.modele.Jeu;
 import projet_java.modele.Puissance_4;
+import projet_java.CoordonneInvalide;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -61,35 +62,70 @@ public class IHM {
         int[] colonne = new int[2];
         System.out.println(PlayerName+ " c'est à vous de jouer !");
         System.out.println();
-        System.out.print("Entrer une colonne : ");
-        colonne[1] = sc.nextInt() -1;  // <- le -1 permet de convertir la colonne saisi en int que java comprend
-        return colonne;
 
+        boolean valide = false;
+        String user;
+        while (!(valide))
+        {
+            try
+            {
+                System.out.print("Veuillez entrer une Colonne : ");
+                user = sc.nextLine();
+                if (user.length() !=1 || !(Character.isDigit((user.charAt(0)))))
+                {
+                    throw new CoordonneInvalide("Veuillez saisir une colonne valide ");
+                }
+                else
+                {
+                   valide = true;
+                   colonne[1] = Integer.parseInt(user) -1;  // On convertie la valeur pour que java puisse l'interpréter pour le jeu
+
+                }
+            }
+            catch (CoordonneInvalide e)
+            {
+                System.out.println(e.getMessage());
+            }
+        }
+        return colonne;
     }
 
+
+
     // Méthode qui récupère les coordonnées(ligne et colonne)
-    public int[] userInputGameM(String playerName) {
+    public int[] userInputGameM(String playerName)
+    {
 
         System.out.println(playerName + " C'est à vous de jouer !");
-        // je n'ai pas de condition qui vérifi si il a bien saisi 2 coordonnées SOS (mais ça devrais passer)
+
         int[] coordonnees = new int[2];
 
-        int cpt=0;
-        int user = 0;
+        boolean valide = false;
+        String user;
 
-        while( cpt <2)
+        while(!(valide))
         {
             try
             {
                 System.out.print("(Exemple de saisi :1 3)\nEntrer les coordonnées de la case :  ");
-                user=sc.nextInt();
-                coordonnees[cpt]=user;
-                cpt++;
+                user=sc.nextLine();
+
+                if (user.length() !=3 || Character.isLetter(user.charAt(0)) || Character.isLetter(user.charAt(2)))
+                {
+                    throw new CoordonneInvalide("Veulliez Saisir des coordonnées Valide !");
+                }
+                else
+                {
+                    valide = true;
+                    String[] coordString = user.split(" ");
+                    coordonnees[0] = Integer.parseInt(coordString[0]);
+                    coordonnees[1] = Integer.parseInt(coordString[1]);
+
+                }
             }
-            catch(InputMismatchException e)
+            catch(CoordonneInvalide e)
             {
-                System.out.println("Veuillez saisir des coordonnés valide (pour ma santé mental) ");
-                sc.next();
+                System.out.println(e.getMessage());
 
             }
         }
@@ -111,9 +147,10 @@ public class IHM {
         boolean valide = false;
         while(!(valide))
         {
+            System.out.println();
             System.out.print("        1: Puissance 4 !\n        2: Morpion !\n\nChoisissez un mode de jeu : ");
             int choix = sc.nextInt();
-            sc.nextLine();
+            sc.nextLine();  // <- consomme le \n résiduel de userInputNewGame
 // Note : Ce qui causait le bug où le prog n'arriver pas à lire ce qu'a saisi l'user lors de la première itération de la boucle (dans la methode userInputNewGame()) c'état un \n qui été causé lorsque user en appuyait sur Entrée après avoir tapé 1 ou 2. nextInt() lit uniquement le chiffre et laisse ce \n d'Entrée dans le buffer. C'est ce \n que sc.nextLine() vient consommer.
             System.out.println();
 
@@ -146,6 +183,8 @@ public class IHM {
 
             System.out.print("Voulez-vous lancer une nouvelle partie (y/n) ? : ");
             String user = sc.next();
+            sc.nextLine(); // consomme le \n résiduel pour que UserInputGameM puisse marcher
+
 
             if(user.equals("y") || user.equals("n" ))
             {

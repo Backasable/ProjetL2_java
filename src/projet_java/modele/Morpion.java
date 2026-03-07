@@ -6,6 +6,7 @@ import projet_java.CoordonneHorsLimite;
 import projet_java.PionDejaPresent;
 import projet_java.modele.Jeu;
 
+
 public class Morpion extends Jeu
 {
 
@@ -63,7 +64,8 @@ public class Morpion extends Jeu
 
         // Si les coordonner ne sont pas dans l'interval de la taille de la grille
         //  alors faux
-        if (!(0 <= coord[0] && coord[0] < g.getNbLigne() || 0 <= coord[1] && coord[1] < g.getNbcol()))
+
+        if (!(0 <= coord[0] && coord[0] < g.getNbLigne() && 0 <= coord[1] && coord[1] < g.getNbcol()))
         {
 
             return false;

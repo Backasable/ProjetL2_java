@@ -97,7 +97,8 @@ public class Controleur {
 
     public static void entrerCoup(Jeu jeu, IHM ihm, Joueur j) {
         boolean coupValid = false;
-        while (!(coupValid)) {
+        while (!(coupValid))
+        {
             try {
                 if (jeu instanceof Puissance_4) {
                     ihm.displayGrilleP(jeu.g);
@@ -105,6 +106,7 @@ public class Controleur {
                     jeu.placement(user, j);
                     ihm.displayGrilleP(jeu.g);
                     coupValid = true;
+
                 } else if (jeu instanceof Morpion) {
                     ihm.displayGrilleM(jeu.g);
                     int[] user = ihm.userInputGame(jeu, j.nom);
@@ -116,13 +118,13 @@ public class Controleur {
 
             } catch (ColonneHorsLimite e) {
                 System.out.println(e.getMessage());
-                int[] user = ihm.userInputGame(jeu, j.nom);
+
             } catch (PionDejaPresent e) {
                 System.out.println(e.getMessage());
-                int[] user = ihm.userInputGame(jeu, j.nom);
+
             } catch (CoordonneHorsLimite e) {
                 System.out.println(e.getMessage());
-                int[] user = ihm.userInputGame(jeu, j.nom);
+
             } catch (Exception e) {
                 System.out.println(e.getMessage());
             }
