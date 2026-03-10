@@ -167,7 +167,7 @@ public class Controleur {
             }
 
 
-            // Tant qu'on ne trouve pas de vainqueur ou que le grille de jeu n'est pas pleine on boucle
+            // Tant qu'on ne trouve pas de vainqueur on boucle
         } while (!(vainqueur));
 
         return "Erreur innatendue Controleur -> meth :loopGame ";  // <- On met ce return pour les mêmes raison que la méthode userInputChoiceGame dans la class IHM

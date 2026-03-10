@@ -16,6 +16,7 @@ public class Morpion extends Jeu
     }
 
 
+
     public boolean equals(int entier1, int entier2, int entier3, int idJoueur){
         boolean compare = false;
 
