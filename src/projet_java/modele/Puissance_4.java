@@ -318,5 +318,58 @@ public class Puissance_4 extends Jeu
             g.saisirVal(j.getcaseTrouverCoord(), j.getidJoueur());
 
     }
+
+    // Affiche la grille pour le Puissance 4
+    @Override
+    public String toString()
+    {
+        String plateau = "";
+        plateau += "\n";
+        plateau +="******** Etat Du Jeu *******";
+        plateau +="\n";
+        plateau +=" ";
+        for (int cptCol = 1; cptCol< g.getNbcol()+1; cptCol++) // Le +1 car pour rappel on veut afficher des coordonné entre 1 et 7 et comme getNbcol = 7 (vu que java commence à compter de 0) on aura jusqu'à 6 et pas 7
+        {
+            plateau +=" "+ cptCol + " ";
+        }
+        plateau +="\n";
+
+        plateau +="-----------------------";  // <- On dessine la ligne du haut du Puiss 4
+        plateau += "\n";
+
+        // Début affichage du plateau
+        for (int cptLig = 0; cptLig< g.getNbLigne(); cptLig++)  // cpt = compteur
+        {
+
+            plateau +="|";
+            for (int cptCol = 0; cptCol < g.getNbcol(); cptCol++)
+            {
+
+                if (g.plateau[cptLig][cptCol] == 0)
+                {
+                    plateau +=" - ";
+
+                } else if (g.plateau[cptLig][cptCol] == 1) // 1 = id du joueur1
+                {
+                    plateau +=" J "; // pion Jaune
+                }
+                else if(g.plateau[cptLig][cptCol] == 2) // 2 = id du joueur2
+                {
+                    plateau +=" R "; // pion Rouge
+                }
+            }
+            plateau +="|";
+            plateau +="\n";
+        }
+        plateau +="-----------------------"; // <- dessine la ligne de la grille du bas
+        return plateau;
+    }
+
+
+
+
+
+
+
 }
 

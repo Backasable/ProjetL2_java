@@ -105,10 +105,10 @@ public class Controleur {
         while (!(coupValid))
         {
             try {
-                ihm.displayGrille(jeu, jeu.g);
+                ihm.displayGrille(jeu);
                 int[] user = ihm.userInputGame(jeu, j.nom);
                 jeu.placement(user, j);
-                ihm.displayGrille(jeu, jeu.g);
+                ihm.displayGrille(jeu);
                 coupValid = true;
 
             } catch (ColonneHorsLimite e) {

@@ -7,20 +7,17 @@ import projet_java.PionDejaPresent;
 import projet_java.modele.Jeu;
 
 
-public class Morpion extends Jeu
-{
+public class Morpion extends Jeu {
 
-    public Morpion(int nbligne, int nbcolonne)
-    {
-        super(nbligne,nbcolonne);
+    public Morpion(int nbligne, int nbcolonne) {
+        super(nbligne, nbcolonne);
     }
 
 
-
-    public boolean equals(int entier1, int entier2, int entier3, int idJoueur){
+    public boolean equals(int entier1, int entier2, int entier3, int idJoueur) {
         boolean compare = false;
 
-        if(entier1 == entier2 && entier2 == entier3 && entier3 == idJoueur){
+        if (entier1 == entier2 && entier2 == entier3 && entier3 == idJoueur) {
             compare = true;
         }
         return compare;
@@ -28,25 +25,25 @@ public class Morpion extends Jeu
     }
 
 
-    public boolean win(Joueur j){
+    public boolean win(Joueur j) {
         //Ligne
         int idJoueur = j.getidJoueur();
         int nbLigne = g.getNbLigne();
         int nbColonne = g.getNbcol();
 
-        for (int cptLignes = 0; cptLignes < nbLigne; cptLignes++){
-            if(equals(g.plateau[cptLignes][0], g.plateau[cptLignes][1], g.plateau[cptLignes][2], idJoueur)){
+        for (int cptLignes = 0; cptLignes < nbLigne; cptLignes++) {
+            if (equals(g.plateau[cptLignes][0], g.plateau[cptLignes][1], g.plateau[cptLignes][2], idJoueur)) {
                 return true;
             }
         }
         //colonne
-        for(int cptColonnes = 0; cptColonnes < nbColonne; cptColonnes++) {
-            if (equals(g.plateau[0][cptColonnes], g.plateau[1][cptColonnes],g.plateau[2][cptColonnes], idJoueur)) {
+        for (int cptColonnes = 0; cptColonnes < nbColonne; cptColonnes++) {
+            if (equals(g.plateau[0][cptColonnes], g.plateau[1][cptColonnes], g.plateau[2][cptColonnes], idJoueur)) {
                 return true;
             }
         }
         // Diagonal
-        if(equals(g.plateau[0][0], g.plateau[1][1], g.plateau[2][2], idJoueur) || equals(g.plateau[2][0], g.plateau[1][1], g.plateau[0][2], idJoueur)){
+        if (equals(g.plateau[0][0], g.plateau[1][1], g.plateau[2][2], idJoueur) || equals(g.plateau[2][0], g.plateau[1][1], g.plateau[0][2], idJoueur)) {
             return true;
         }
 
@@ -55,8 +52,7 @@ public class Morpion extends Jeu
     }
 
     // On check les coordonné entrer par le Joueur
-    public boolean checkCoordM(int[] coord) throws CoordonneHorsLimite
-    {
+    public boolean checkCoordM(int[] coord) throws CoordonneHorsLimite {
 
         // Rappel :
         // coord[0] -> la ligne entrer par User
@@ -66,28 +62,73 @@ public class Morpion extends Jeu
         // Si les coordonner ne sont pas dans l'interval de la taille de la grille
         //  alors faux
 
-        if (!(0 <= coord[0] && coord[0] < g.getNbLigne() && 0 <= coord[1] && coord[1] < g.getNbcol()))
-        {
+        if (!(0 <= coord[0] && coord[0] < g.getNbLigne() && 0 <= coord[1] && coord[1] < g.getNbcol())) {
 
             return false;
-        }
-        else
-        {
+        } else {
             return true;
         }
 
     }
 
-    public void placement(int[] coord, Joueur j) throws PionDejaPresent, CoordonneHorsLimite, ColonneHorsLimite
-    {
-        if(!(checkCoordM(coord)))
-        {
-            throw new CoordonneHorsLimite("Vous avez saisie des coordonné invalide : " + coord[0] +" "+ coord[1]);
-        }
-        else
-        {
+    public void placement(int[] coord, Joueur j) throws PionDejaPresent, CoordonneHorsLimite, ColonneHorsLimite {
+        if (!(checkCoordM(coord))) {
+            throw new CoordonneHorsLimite("Vous avez saisie des coordonné invalide : " + coord[0] + " " + coord[1]);
+        } else {
             g.saisirVal(coord, j.getidJoueur());
         }
+    }
+
+
+    @Override
+    public String toString() {
+        String plateau = "";
+
+        plateau += "\n";
+        plateau += "________Etat Du Jeu________";
+        plateau += "\n";
+        plateau += "    ";
+
+        // Affichage des coordonné des colonnes
+        for (int cptCol = 1; cptCol < g.getNbcol() + 1; cptCol++) // le +1 même principe que dans displayGrilleP
+        {
+            plateau += " " + cptCol + " ";
+        }
+        plateau += "\n";
+        plateau += "   -----------";
+        plateau += "\n";
+
+
+        // Début affichage de la grille
+        int cptAffCoordLigne = 1;
+        for (int cptLig = 0; cptLig < g.getNbLigne(); cptLig++)  // cpt = compteur
+        {
+            plateau += " " + cptAffCoordLigne + " |";  // <- affichage des coordonné des lignes
+            cptAffCoordLigne++;
+
+            for (int cptCol = 0; cptCol < g.getNbcol(); cptCol++) {
+
+                if (g.plateau[cptLig][cptCol] == 0) {
+                    plateau += " - ";
+
+                } else if (g.plateau[cptLig][cptCol] == 1) // 1 = id du joueur1
+                {
+                    plateau += " X ";
+                } else if (g.plateau[cptLig][cptCol] == 2) // 2 = id du joueur2
+                {
+                    plateau += " O ";
+                }
+            }
+            plateau += "|";
+            plateau += "\n";
+
+
+        }
+
+        plateau += "   -----------";
+        plateau += "\n";
+        return plateau;
+
     }
 
 }
