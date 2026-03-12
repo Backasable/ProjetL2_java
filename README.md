@@ -377,7 +377,11 @@ dans l'IHM, sa implique que l'IHM connaisse Grille donc le modèle sauf que on e
 
 
 
+Tache à faire : 
 
+modifier enregistre pour que joueur connaisse son score  A voir mais Non flemme !
+pour affichage des grilles on doit use toString 
+Gestion des jetons poussance 4 J R  et Morpion c'est X O  __completed
 
 
 

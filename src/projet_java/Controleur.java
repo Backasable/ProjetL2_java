@@ -18,8 +18,6 @@ public class Controleur {
         this.ihm = new IHM();
         this.save = new Enregistre();
 
-
-
     }
 
     public void lancerJeu() {
@@ -102,26 +100,16 @@ public class Controleur {
     }
 
 
-    public static void entrerCoup(Jeu jeu, IHM ihm, Joueur j) {
+    public void entrerCoup(Jeu jeu, IHM ihm, Joueur j) {
         boolean coupValid = false;
         while (!(coupValid))
         {
             try {
-                if (jeu instanceof Puissance_4) {
-                    ihm.displayGrilleP(jeu.g);
-                    int[] user = ihm.userInputGame(jeu, j.nom);
-                    jeu.placement(user, j);
-                    ihm.displayGrilleP(jeu.g);
-                    coupValid = true;
-
-                } else if (jeu instanceof Morpion) {
-                    ihm.displayGrilleM(jeu.g);
-                    int[] user = ihm.userInputGame(jeu, j.nom);
-                    jeu.placement(user, j);
-                    ihm.displayGrilleM(jeu.g);
-                    coupValid = true;
-                }
-
+                ihm.displayGrille(jeu, jeu.g);
+                int[] user = ihm.userInputGame(jeu, j.nom);
+                jeu.placement(user, j);
+                ihm.displayGrille(jeu, jeu.g);
+                coupValid = true;
 
             } catch (ColonneHorsLimite e) {
                 System.out.println(e.getMessage());
@@ -140,7 +128,7 @@ public class Controleur {
     }
 
 
-    public static String loopGame(Jeu jeu, IHM ihm, Joueur j1, Joueur j2) {
+    public String loopGame(Jeu jeu, IHM ihm, Joueur j1, Joueur j2) {
         boolean vainqueur = false;
         do {
 

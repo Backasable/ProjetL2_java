@@ -258,6 +258,17 @@ public class IHM {
     }
 
     // Affichage grille Morpion
+    public void displayGrille(Jeu j, Grille g)
+    {
+        if (j instanceof Puissance_4)
+        {
+            displayGrilleP(g);
+        }
+        else
+        {
+          displayGrilleM(g);
+        }
+    }
     public void displayGrilleM(Grille g)
     {
 

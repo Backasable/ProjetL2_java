@@ -4,8 +4,9 @@ public class Joueur
 {
     public String nom;
     public int idJoueur;
-    public static int cptJoueur = 1;
+    private static int cptJoueur = 1;
     private int[] caseTrouverCoord;  // <- Utilisé dans le puissance 4, on récupère les coordonnées de la case où le pion jouer par le joueur est tombé
+
 
     public Joueur(String nom)
     {
@@ -15,6 +16,8 @@ public class Joueur
 
         cptJoueur++;
     }
+
+
 
     public int  getidJoueur()
     {
