@@ -262,4 +262,34 @@ public class IHM {
         System.out.println(j);
     }
 
+    public int choiceModeJeu()
+    {
+        String user = null;
+        boolean valide = false;
+        while(!(valide))
+        {
+            System.out.println();
+            System.out.println("Jouer contre :\n           1: Une AI !\n           2: Un Joueur ! ");
+            System.out.println();
+            System.out.println("Veullier choisir un mode de jeu ! :");
+            user = sc.nextLine();
+            if (user.equals("1") || user.equals("2") )
+            {
+                valide = true;
+
+            }
+            else
+            {
+                System.out.println("Veuillez saisir une choix valide ");
+            }
+
+        }
+        return  Integer.parseInt(user); // <- necessaire
+    }
+
+
+
+
+
 }
+

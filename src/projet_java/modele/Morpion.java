@@ -131,4 +131,48 @@ public class Morpion extends Jeu {
 
     }
 
+
+
+
+
+
+    // Methode vérifant si le joueur ou l'IA peuvent gagner au prochain coup et renvoi la case gagante si vrai sinon elle revoie null
+    public int[] Verifwin(Joueur j)
+    {
+        int[] caseGagnant = null;
+        for (int ligne = 0; ligne < g.getNbLigne(); ligne++)
+        {
+            for (int col = 0; col<g.getNbcol(); col++ )
+            {
+                if (g.plateau[ligne][col] == 0)
+                {
+                    g.plateau[ligne][col] = j.idJoueur;
+                    if (win(j))
+                    {
+
+                        g.plateau[ligne][col] = 0;
+                        caseGagnant = new int[] {ligne, col};
+
+                    }
+                }
+
+            }
+        }
+        return caseGagnant;
+    }
+
+
+    public void prendreCentre(Joueur j)
+    {
+
+        g.plateau[2][2]= j.idJoueur;
+    }
+
+    public void prendreCoin(Joueur j)
+    {
+        int[][] CoordCoin = { }
+        g.plateau[2][2]= j.idJoueur;
+    }
+
+
 }

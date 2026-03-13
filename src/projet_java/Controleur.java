@@ -20,14 +20,77 @@ public class Controleur {
 
     }
 
+
     public void lancerJeu() {
 
-        Joueur[] tabJoueur = creationJoueur(ihm);
-        Joueur j1 = tabJoueur[0];
-        Joueur j2 = tabJoueur[1];
+        ihm.acceuil();
+        Joueur j1 = new Joueur(ihm.UserInputName());
+        int choiceMode = ihm.choiceModeJeu();
+
+        if (choiceMode == 2) {
+            lancerJeuMulti(ihm, j1);
+        }
+        else
+        {
+            lancerJeuIA(j1);
+        }
+
+
+    }
+
+    public void lancerJeuIA(Joueur j1)
+    {
+        Joueur IA = new  Joueur("AI");
+        int choicePlayerG = ihm.UserInputChoiceGame();
+        Jeu jeu = creationJeu(choicePlayerG);
+
+        int cptNbPartie = 0;
+
+
+        while (newGame(ihm)) {
+
+            cptNbPartie++;
+            String res = loopGameIA(jeu, ihm, j1, IA);
+            save.ajouterRes(res);
+            ihm.affichierGagnant(res);
+            jeu.g.clearGrille();
+
+        }
+
+        if (cptNbPartie ==0 )
+        {
+            ihm.aucunePartieJouer();
+            return;  // <- le return pour mettre fin au programme
+        }
+        else if(save.affichMap().length == 0)
+        {
+            ihm.aucunePartiegagne();
+        }
+        else
+        {
+            ihm.affichageScoreJeu(save.affichMap());
+            ihm.nameVainqueur(save.CalculerVainqueur());
+        }
+
+    }
 
 
 
+    public String loopGameIA(Jeu jeu, Joueur j1,  Joueur IA)
+    {
+
+
+    }
+
+
+
+
+
+
+    public void lancerJeuMulti(IHM ihm, Joueur j1)
+    {
+
+        Joueur j2 = new Joueur(ihm.UserInputName());
 
         int choicePlayerG = ihm.UserInputChoiceGame();
         Jeu jeu = creationJeu(choicePlayerG);
@@ -84,20 +147,6 @@ public class Controleur {
 // Fonction Pour le tout début :
 
 
-    public Joueur[] creationJoueur(IHM ihm) {
-        ihm.acceuil();
-        Joueur[] tabJoueur = new Joueur[2];
-
-        String playerName = ihm.UserInputName();
-        Joueur j1 = new Joueur(playerName);
-        tabJoueur[0] = j1;
-
-        String playerName2 = ihm.UserInputName();
-        Joueur j2 = new Joueur(playerName2);
-        tabJoueur[1] = j2;
-        return tabJoueur;
-
-    }
 
 
     public void entrerCoup(Jeu jeu, IHM ihm, Joueur j) {
