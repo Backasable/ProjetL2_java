@@ -1,10 +1,6 @@
 package projet_java;
 
-import projet_java.modele.Enregistre;
-import projet_java.modele.Joueur;
-import projet_java.modele.Morpion;
-import projet_java.modele.Puissance_4;
-import projet_java.modele.Jeu;
+import projet_java.modele.*;
 import projet_java.vue.IHM;
 
 
@@ -19,6 +15,8 @@ public class Controleur {
         this.save = new Enregistre();
 
     }
+
+//=======================Methode_de_base_necessaire==================================================
 
 
     public void lancerJeu() {
@@ -35,8 +33,31 @@ public class Controleur {
             lancerJeuIA(j1);
         }
 
-
     }
+
+    public Jeu creationJeu(int choicePlayerG) {
+
+        if (choicePlayerG == 1) {
+
+            Jeu jeu = new Puissance_4(6, 7);
+            return jeu;
+        } else {
+            Jeu jeu = new Morpion(3, 3);
+            return jeu;
+        }
+    }
+
+    public boolean newGame(IHM ihm) {
+        String choice = ihm.UserInputNewGame();
+        return choice.equals("y");
+    }
+
+
+
+
+
+//==================================Methode_pour_jouer_contre_IA===============================================
+
 
     public void lancerJeuIA(Joueur j1)
     {
@@ -44,13 +65,15 @@ public class Controleur {
         int choicePlayerG = ihm.UserInputChoiceGame();
         Jeu jeu = creationJeu(choicePlayerG);
 
+        BrainIA iaBrain = new BrainIA(jeu.g);
+
         int cptNbPartie = 0;
 
 
         while (newGame(ihm)) {
 
             cptNbPartie++;
-            String res = loopGameIA(jeu, ihm, j1, IA);
+            String res = loopGameIA(jeu, j1, IA, iaBrain);
             save.ajouterRes(res);
             ihm.affichierGagnant(res);
             jeu.g.clearGrille();
@@ -75,17 +98,48 @@ public class Controleur {
     }
 
 
-
-    public String loopGameIA(Jeu jeu, Joueur j1,  Joueur IA)
+    public String loopGameIA(Jeu jeu, Joueur j,  Joueur ia, BrainIA iaBrain)
     {
+        boolean vainqueur = false;
+        do {
+
+            entrerCoup(jeu, ihm, j);
+
+            if (jeu.win(j)) {
+
+                vainqueur = true;
+                return j.nom;
+            }
+
+            if (jeu.g.checkGrillefull())
+            {
+                vainqueur = true; // <- optionnel mais pour que ce soit joli je le met
+                return "ex aequo";
+            }
 
 
+            iaBrain.entrerCoupIA(jeu, ia, j);
+            ihm.displayGrille(jeu);
+
+            if (jeu.win(ia)) {
+                vainqueur = true;
+                return ia.nom;
+            }
+
+
+            // Tant qu'on ne trouve pas de vainqueur on boucle
+        } while (!(vainqueur));
+
+        return "Erreur innatendue Controleur -> meth :loopGame ";  // <- On met ce return pour les mêmes raison que la méthode userInputChoiceGame dans la class IHM
     }
 
 
 
 
 
+
+
+//==============================================Methode_pour_jouer_MultiJoueur=============================
 
     public void lancerJeuMulti(IHM ihm, Joueur j1)
     {
@@ -124,29 +178,6 @@ public class Controleur {
         }
 
     }
-
-
-    public Jeu creationJeu(int choicePlayerG) {
-
-        if (choicePlayerG == 1) {
-
-            Jeu jeu = new Puissance_4(6, 7);
-            return jeu;
-        } else {
-            Jeu jeu = new Morpion(3, 3);
-            return jeu;
-        }
-    }
-
-    public boolean newGame(IHM ihm) {
-        String choice = ihm.UserInputNewGame();
-        return choice.equals("y");
-    }
-
-
-// Fonction Pour le tout début :
-
-
 
 
     public void entrerCoup(Jeu jeu, IHM ihm, Joueur j) {

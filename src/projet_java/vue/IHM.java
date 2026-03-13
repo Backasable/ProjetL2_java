@@ -269,9 +269,9 @@ public class IHM {
         while(!(valide))
         {
             System.out.println();
-            System.out.println("Jouer contre :\n           1: Une AI !\n           2: Un Joueur ! ");
+            System.out.println("Jouer contre :\n\n           1: Une AI !\n           2: Un Joueur ! ");
             System.out.println();
-            System.out.println("Veullier choisir un mode de jeu ! :");
+            System.out.print("Veullier choisir un mode de jeu ! : ");
             user = sc.nextLine();
             if (user.equals("1") || user.equals("2") )
             {

@@ -121,6 +121,22 @@ public class Grille
             return CaseVide;
         }
     }
+
+    public int compteurCaseVide()
+    {
+        int cpt = 0;
+        for (int ligne = 0; ligne < this.nbLigne; ligne++)
+        {
+            for (int col = 0; col < this.nbColonne; col++)
+            {
+                if (plateau[ligne][col] == 0)
+                {
+                    cpt ++;
+                }
+            }
+        }
+        return cpt;
+    }
 //===================================================================================
 
 }
