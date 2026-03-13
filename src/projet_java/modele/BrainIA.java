@@ -169,7 +169,7 @@ public class BrainIA {
     }
 
 
-    public void entrerCoupIA(Jeu jeu, Joueur ia, Joueur j)
+    public void entrerCoupIAM(Jeu jeu, Joueur ia, Joueur j)
     {
         while (jeu.g.compteurCaseVide() > 4)
         {
@@ -182,38 +182,53 @@ public class BrainIA {
 
             if (caseGagantIA != null)
             {
-                placement(caseGagantIA, ia);
+                placementM(caseGagantIA, ia);
                 return; // <- pour mettre fin à la méthode
             }
             else if (caseGagantJ != null)
             {
-                placement(caseGagantJ, ia);
+                placementM(caseGagantJ, ia);
                 return;
             }
             else if (centre != null)
             {
-                placement(centre, ia);
+                placementM(centre, ia);
                 return;
             }
             else if  (cote != null)
             {
-                placement(cote, ia);
+                placementM(cote, ia);
                 return;
             }
             else if( coin != null)
             {
-                placement(coin, ia);
+                placementM(coin, ia);
                 return;
             }
 
         }
 
-        // implémente MinMax
+        // appeler meilleur coup dans lequel on a MinMax
     }
 
+    public void entrerCoupIAP(Jeu jeu, Joueur ia, Joueur j)
+    {
+        // Natacha partie
+    }
 
+    public void entrerCoupIA(Jeu jeu, Joueur ia, Joueur j)
+    {
+        if(jeu instanceof Morpion)
+        {
+            entrerCoupIAM(jeu, ia, j);
+        }
+        else if( jeu instanceof Puissance_4)
+        {
+            entrerCoupIAP(jeu, ia,j);
+        }
+    }
 
-    public void placement(int[] coord, Joueur j)
+    public void placementM(int[] coord, Joueur j)
     {
         g.plateau[coord[0]][coord[1]] =j.idJoueur;
     }
