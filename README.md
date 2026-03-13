@@ -385,4 +385,10 @@ Gestion des jetons poussance 4 J R  et Morpion c'est X O  __completed !
 
 
 
+Modification DDCS : 
+
+Ajoute methode choiceModeJeu dans IHM
+ajoute methode lancerMulti dans Controleur 
+ajoute méthode verifWin dans morpion 
+ajoute prendreCoin dans Morpion
 

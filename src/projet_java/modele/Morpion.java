@@ -149,7 +149,6 @@ public class Morpion extends Jeu {
                     g.plateau[ligne][col] = j.idJoueur;
                     if (win(j))
                     {
-
                         g.plateau[ligne][col] = 0;
                         caseGagnant = new int[] {ligne, col};
 
@@ -170,7 +169,7 @@ public class Morpion extends Jeu {
 
     public void prendreCoin(Joueur j)
     {
-        int[][] CoordCoin = { }
+        int[][] CoordCoin = new int[][]{ }
         g.plateau[2][2]= j.idJoueur;
     }
 
