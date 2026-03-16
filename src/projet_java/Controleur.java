@@ -103,18 +103,19 @@ public class Controleur {
         boolean vainqueur = false;
         do {
 
+            if (jeu.g.checkGrillefull())
+            {
+                vainqueur = true; // <- optionnel mais pour que ce soit joli je le met
+                return "ex aequo";
+            }
+
+
             entrerCoup(jeu, ihm, j);
 
             if (jeu.win(j)) {
 
                 vainqueur = true;
                 return j.nom;
-            }
-
-            if (jeu.g.checkGrillefull())
-            {
-                vainqueur = true; // <- optionnel mais pour que ce soit joli je le met
-                return "ex aequo";
             }
 
 
