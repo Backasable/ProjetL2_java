@@ -21,6 +21,12 @@ public class Puissance_4 extends Jeu
 // On a donc juste a placer dans le win le joueur
     public boolean win(Joueur j)
     {
+        // Pour le coupIAP dans brain IA
+        if (j.getcaseTrouverCoord() == null)
+        {
+            return false;
+        }
+
         int[] coordCasePion = j.getcaseTrouverCoord();
         int ligne = coordCasePion[0];
         int colonne = coordCasePion[1];

@@ -4,10 +4,12 @@ import java.util.Random;
 
 public class BrainIA {
     private Grille g;
+    private Random random;
 
     public BrainIA(Grille g)
     {
         this.g = g;
+        this.random = new Random();
     }
 
 
@@ -44,8 +46,6 @@ public class BrainIA {
                     {
                         g.plateau[ligne][col] = 0;
                         caseGagnant = new int[] {ligne, col};
-
-
                     }
                     else
                     {
@@ -55,6 +55,7 @@ public class BrainIA {
 
             }
         }
+        // on met un null car il faut qu'il y ait un return statement et ça m'arrange aussi car quand on vérif si l'ia a gagné lors du premier tour, elle n'a pas encore joué donc il me faut un retourne null
         return caseGagnant;
     }
 
@@ -182,27 +183,27 @@ public class BrainIA {
 
             if (caseGagantIA != null)
             {
-                placementM(caseGagantIA, ia);
+                placement(caseGagantIA, ia);
                 return; // <- pour mettre fin à la méthode
             }
             else if (caseGagantJ != null)
             {
-                placementM(caseGagantJ, ia);
+                placement(caseGagantJ, ia);
                 return;
             }
             else if (centre != null)
             {
-                placementM(centre, ia);
+                placement(centre, ia);
                 return;
             }
             else if  (cote != null)
             {
-                placementM(cote, ia);
+                placement(cote, ia);
                 return;
             }
             else if( coin != null)
             {
-                placementM(coin, ia);
+                placement(coin, ia);
                 return;
             }
 
@@ -211,41 +212,58 @@ public class BrainIA {
         // appeler meilleur coup dans lequel on a MinMax
     }
 
-    public void entrerCoupIAP(Jeu jeu, Joueur ia, Joueur j)
-    {
-        // Natacha partie -> j'essaie de codé du même style que toi mais les return est inutile
-        if (jeu.g.compteurCaseVide() != 0) { // j'utilise if car j'ai utiliser do while pour chercher les colonne aléatoire l'ia fait des coups
+    public void entrerCoupIAP(Jeu jeu, Joueur ia, Joueur j) {
 
+        // On vérif d'abord si le Joueur lors de son prochain coup pourrait gagné et si c'est le cas, l'ia joue la case qu'il était sensé jouer
+        int[] caseGagnantJ = verifwin(jeu, j);
 
-            int[] coupGagnantIA = verifwin(jeu, ia); //change le nom en casegagnant? la flemme pour l'instant
-            int[] coupGagnantJ = verifwin(jeu, j);
-            Random random = new Random();
+        if (caseGagnantJ != null) {
+            placement(caseGagnantJ, ia);
+            return; // <- on met fin à la fct
+        }
+        // Si l'ia peut gagné
+
+        if (verifwin(jeu, ia) != null)
+        {
+            int[] caseGagnantIA = verifwin(jeu, ia);
+            placement(caseGagnantIA, ia);
+        }
+        else {
+
             int col;
             int[] caseVide;
 
-
-            if (coupGagnantIA != null) {
-                placementP(coupGagnantIA, ia); //verife si l'ia peut gagner immediatement
-
-            } else if (coupGagnantJ != null) {
-                placementP(coupGagnantJ, ia);   //verifie si le joueur adversaire gagne l'ia le bloque
-            } else {
-                do {
-                    col = random.nextInt(7); //cherche colonne aleatoire entre 0 à 6
-                    caseVide = jeu.g.findCaseVide(col);
-                } while (caseVide == null); //colonne plein -> on recommence
-
-                placementP(caseVide, ia); //execute lorsque case vide trouve on sort du boucle do-while "(casevide != null)"
-                //j'utilise boucle do-while pour pas ecrire 2 FOIS col = blabla et caseVIDE = BLABLA
+            // Cherche une colonne qui n'est pas pleine
+            do {
+                col = randomeCol();
+                caseVide = jeu.g.findCaseVide(col);
             }
-            //case plein on s'arrete
-            //fin du condition if peut etre while est mieux mais j'ai deja do-while
+            // tant qu'on a pas de case valide i.e s'il y a déjà un pion dessus on boucle
+            while (!(verifColpleine(caseVide)));
+
+            ia.setcaseTrouverCoord(caseVide);  // est-on passer ????????????????
+            placement(caseVide, ia);
 
         }
-    // code pour minmax
+    }
 
 
 
+    public int randomeCol()
+    {
+        return random.nextInt(7);
+    }
+
+    public boolean verifColpleine(int[] coord)
+    {
+        if (g.plateau[coord[0]][coord[1]] != 0)
+        {
+            return false;
+        }
+        else
+        {
+            return true;
+        }
     }
 
     public void entrerCoupIA(Jeu jeu, Joueur ia, Joueur j)
@@ -260,14 +278,11 @@ public class BrainIA {
         }
     }
 
-    public void placementM(int[] coord, Joueur j)
+    public void placement(int[] coord, Joueur j)
     {
         g.plateau[coord[0]][coord[1]] =j.idJoueur;
     }
 
-    public void placementP(int[] coord, Joueur j) {
-        g.plateau[coord[0]][coord[1]] =j.idJoueur;
-    }
 
 
 
