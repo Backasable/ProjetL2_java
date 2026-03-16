@@ -1,6 +1,6 @@
 package projet_java.modele;
 
-
+import java.util.Random;
 
 public class BrainIA {
     private Grille g;
@@ -213,7 +213,39 @@ public class BrainIA {
 
     public void entrerCoupIAP(Jeu jeu, Joueur ia, Joueur j)
     {
-        // Natacha partie
+        // Natacha partie -> j'essaie de codé du même style que toi mais les return est inutile
+        if (jeu.g.compteurCaseVide() != 0) { // j'utilise if car j'ai utiliser do while pour chercher les colonne aléatoire l'ia fait des coups
+
+
+            int[] coupGagnantIA = verifwin(jeu, ia); //change le nom en casegagnant? la flemme pour l'instant
+            int[] coupGagnantJ = verifwin(jeu, j);
+            Random random = new Random();
+            int col;
+            int[] caseVide;
+
+
+            if (coupGagnantIA != null) {
+                placementP(coupGagnantIA, ia); //verife si l'ia peut gagner immediatement
+
+            } else if (coupGagnantJ != null) {
+                placementP(coupGagnantJ, ia);   //verifie si le joueur adversaire gagne l'ia le bloque
+            } else {
+                do {
+                    col = random.nextInt(7); //cherche colonne aleatoire entre 0 à 6
+                    caseVide = jeu.g.findCaseVide(col);
+                } while (caseVide == null); //colonne plein -> on recommence
+
+                placementP(caseVide, ia); //execute lorsque case vide trouve on sort du boucle do-while "(casevide != null)"
+                //j'utilise boucle do-while pour pas ecrire 2 FOIS col = blabla et caseVIDE = BLABLA
+            }
+            //case plein on s'arrete
+            //fin du condition if peut etre while est mieux mais j'ai deja do-while
+
+        }
+    // code pour minmax
+
+
+
     }
 
     public void entrerCoupIA(Jeu jeu, Joueur ia, Joueur j)
@@ -230,6 +262,10 @@ public class BrainIA {
 
     public void placementM(int[] coord, Joueur j)
     {
+        g.plateau[coord[0]][coord[1]] =j.idJoueur;
+    }
+
+    public void placementP(int[] coord, Joueur j) {
         g.plateau[coord[0]][coord[1]] =j.idJoueur;
     }
 
