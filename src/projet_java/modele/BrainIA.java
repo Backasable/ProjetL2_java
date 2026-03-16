@@ -32,7 +32,7 @@ public class BrainIA {
     }
 
     // Methode vérifant si le joueur ou l'IA peuvent gagner au prochain coup et renvoi la case gagante si vrai sinon elle revoie null
-    public int[] verifwin(Jeu jeu, Joueur j)
+    public int[] verifwinM(Jeu jeu, Joueur j)
     {
         int[] caseGagnant = null;
         for (int ligne = 0; ligne < g.getNbLigne(); ligne++)
@@ -57,6 +57,49 @@ public class BrainIA {
         }
         // on met un null car il faut qu'il y ait un return statement et ça m'arrange aussi car quand on vérif si l'ia a gagné lors du premier tour, elle n'a pas encore joué donc il me faut un retourne null
         return caseGagnant;
+    }
+
+    // équivalent du verifWinM mais pour le puissance 4
+    // C'est à dire qu'elle simule le fait qu'un joueur va jouer et teste tout les colonne
+    // Si il y a un moment où le pion du joueur tombe dans une case qui lui permet d'obtenir la victoire, alors on
+    public int[]  verifwinP(Jeu jeu, Joueur j)
+    {
+        for (int col = 0; col<g.getNbcol(); col++)
+        {
+            int[] caseGagnant = new int[2];
+            int[] caseVide = g.findCaseVide(col);
+            int ligne = caseVide[0];
+            int colonne = caseVide[1];
+
+            // On vérifie d'abord si la colonne n'est pas pleine
+            if (g.plateau[ligne][colonne] == 0)
+            {
+                // On simule le fait qu'un joueur joue un coup
+                g.plateau[ligne][colonne] = j.idJoueur;
+
+                // On enregistre le coup dans cette attribut car win regarde uniquement cette attribut
+                j.setcaseTrouverCoord(caseVide);
+
+                // On regarde si son coup lui permet de gagné
+                if (jeu.win(j))
+                {
+                    // On récupère si c'est le cas les coord de la case gagnante
+                    caseGagnant[0] = ligne;
+                    caseGagnant[1] = colonne;
+
+                    // On fait attention à bien annuler son coup
+                    g.plateau[ligne][colonne] = 0;
+
+
+                    // Et on renvoie les coord de la case gagnante
+                    return caseGagnant;
+                }
+
+                // S'il ne gagne pas avec cette colonne, alors on annule son coup et on passe à la colonne suivante
+                g.plateau[ligne][colonne] = 0;
+            }
+        }
+        return null;
     }
 
 
@@ -175,8 +218,8 @@ public class BrainIA {
         while (jeu.g.compteurCaseVide() > 4)
         {
             // Si le joueur s'apprête à gagner l'ia joue sur la case qui fera gagner le joueur
-            int[] caseGagantJ = verifwin(jeu, j);
-            int[] caseGagantIA = verifwin(jeu, ia);
+            int[] caseGagantJ = verifwinM(jeu, j);
+            int[] caseGagantIA = verifwinM(jeu, ia);
             int[] centre  = prendreCentre();
             int[] cote = prendreCote();
             int[] coin = prendreCoin();
@@ -215,17 +258,17 @@ public class BrainIA {
     public void entrerCoupIAP(Jeu jeu, Joueur ia, Joueur j) {
 
         // On vérif d'abord si le Joueur lors de son prochain coup pourrait gagné et si c'est le cas, l'ia joue la case qu'il était sensé jouer
-        int[] caseGagnantJ = verifwin(jeu, j);
+        int[] caseGagnantJ = verifwinP(jeu, j);
 
         if (caseGagnantJ != null) {
             placement(caseGagnantJ, ia);
             return; // <- on met fin à la fct
         }
-        // Si l'ia peut gagné
 
-        if (verifwin(jeu, ia) != null)
+        // Si l'ia peut gagné
+        if (verifwinP(jeu, ia) != null)
         {
-            int[] caseGagnantIA = verifwin(jeu, ia);
+            int[] caseGagnantIA = verifwinP(jeu, ia);
             placement(caseGagnantIA, ia);
         }
         else {
@@ -241,7 +284,7 @@ public class BrainIA {
             // tant qu'on a pas de case valide i.e s'il y a déjà un pion dessus on boucle
             while (!(verifColpleine(caseVide)));
 
-            ia.setcaseTrouverCoord(caseVide);  // est-on passer ????????????????
+            ia.setcaseTrouverCoord(caseVide);  // On a besoin de cela pour le win du puissance 4 qui va chercher dans cette attribue la valeur dont il a besoin
             placement(caseVide, ia);
 
         }
@@ -254,6 +297,7 @@ public class BrainIA {
         return random.nextInt(7);
     }
 
+    // Dans la situation où notre colonne serait plein cette méthode intervient ! et vérifie si c'est le cas en regardant si la case où va tomber notre pion il y aura déjà un pion
     public boolean verifColpleine(int[] coord)
     {
         if (g.plateau[coord[0]][coord[1]] != 0)
