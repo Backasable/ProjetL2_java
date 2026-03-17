@@ -1,5 +1,6 @@
 package projet_java.modele;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 public class BrainIA {
@@ -215,7 +216,8 @@ public class BrainIA {
 
     public void entrerCoupIAM(Jeu jeu, Joueur ia, Joueur j)
     {
-        while (jeu.g.compteurCaseVide() > 4)
+        // Si on a pas 4 case vide restante alors :
+        if (!(jeu.g.compteurCaseVide() > 4))
         {
             // Si le joueur s'apprête à gagner l'ia joue sur la case qui fera gagner le joueur
             int[] caseGagantJ = verifwinM(jeu, j);
@@ -252,7 +254,33 @@ public class BrainIA {
 
         }
 
-        // appeler meilleur coup dans lequel on a MinMax
+        else
+        {
+            int[] coupIA = meilleurCoup(jeu, j, ia);
+            placement(coupIA, ia);
+        }
+
+    }
+
+    public ArrayList<int[]> recupCoordCaseVide()
+    {
+        ArrayList<int[]> tabCoord= new ArrayList<>();  // tabCoord ressemblera à cela par exemple : [ [0,1], [3,0] ]
+        for (int ligne = 0; ligne < g.getNbcol(); ligne++)
+        {
+            for (int col = 0; col < g.getNbcol(); col++)
+            {
+                if(g.plateau[ligne][col] == 0)
+                {
+                    tabCoord.add(new int[]{ligne, col});
+                }
+            }
+        }
+        return tabCoord;
+    }
+
+    public int[] meilleurCoup(Jeu jeu, Joueur ia, Joueur j)
+    {
+
     }
 
     public void entrerCoupIAP(Jeu jeu, Joueur ia, Joueur j) {
