@@ -9,6 +9,7 @@ public class Controleur {
     private Enregistre save;
 
 
+
     public Controleur(IHM ihm)
     {
         this.ihm = new IHM();
@@ -21,19 +22,46 @@ public class Controleur {
 
     public void lancerJeu() {
 
-        ihm.acceuil();
-        Joueur j1 = new Joueur(ihm.UserInputName());
-        int choiceMode = ihm.choiceModeJeu();
+        Joueur[] joueurs = creationjoueur();
+        Joueur j1 = joueurs[0];
+        Joueur j2 = joueurs[1];
 
-        if (choiceMode == 2) {
-            lancerJeuMulti(ihm, j1);
+        int choicePlayerG = ihm.UserInputChoiceGame();
+        Jeu jeu = creationJeu(choicePlayerG);
+
+        BrainIA iaBrain = new BrainIA(jeu.g);
+
+        int cptNbPartie = 0;
+
+
+        while (newGame(ihm)) {
+
+            cptNbPartie++;
+            String res = loopGame(jeu, j1, j2, iaBrain);
+            save.ajouterRes(res);
+            ihm.affichierGagnant(res);
+            jeu.g.clearGrille();
+
+        }
+
+        if (cptNbPartie ==0 )
+        {
+            ihm.aucunePartieJouer();
+            return;  // <- le return pour mettre fin au programme
+        }
+        else if(save.affichMap().length == 0)
+        {
+            ihm.aucunePartiegagne();
         }
         else
         {
-            lancerJeuIA(j1);
+            ihm.affichageScoreJeu(save.affichMap());
+            ihm.nameVainqueur(save.CalculerVainqueur());
         }
 
     }
+
+
 
     public Jeu creationJeu(int choicePlayerG) {
 
@@ -47,145 +75,36 @@ public class Controleur {
         }
     }
 
-    public boolean newGame(IHM ihm) {
+    public boolean newGame(IHM ihm)
+    {
         String choice = ihm.UserInputNewGame();
         return choice.equals("y");
     }
 
-
-
-
-
-//==================================Methode_pour_jouer_contre_IA===============================================
-
-
-    public void lancerJeuIA(Joueur j1)
+    public Joueur[] creationjoueur()
     {
-        Joueur IA = new  Joueur("AI");
-        int choicePlayerG = ihm.UserInputChoiceGame();
-        Jeu jeu = creationJeu(choicePlayerG);
+        ihm.acceuil();
+        Joueur j1 = new Joueur(ihm.UserInputName());
+        int choiceMode = ihm.choiceModeJeu();
 
-        BrainIA iaBrain = new BrainIA(jeu.g);
+        Joueur j2 = null;
 
-        int cptNbPartie = 0;
+            if (choiceMode == 2) {
+                j2 = new Joueur(ihm.UserInputName());
 
-
-        while (newGame(ihm)) {
-
-            cptNbPartie++;
-            String res = loopGameIA(jeu, j1, IA, iaBrain);
-            save.ajouterRes(res);
-            ihm.affichierGagnant(res);
-            jeu.g.clearGrille();
-
-        }
-
-        if (cptNbPartie ==0 )
-        {
-            ihm.aucunePartieJouer();
-            return;  // <- le return pour mettre fin au programme
-        }
-        else if(save.affichMap().length == 0)
-        {
-            ihm.aucunePartiegagne();
-        }
-        else
-        {
-            ihm.affichageScoreJeu(save.affichMap());
-            ihm.nameVainqueur(save.CalculerVainqueur());
-        }
-
-    }
-
-
-    public String loopGameIA(Jeu jeu, Joueur j,  Joueur ia, BrainIA iaBrain)
-    {
-        boolean vainqueur = false;
-        do {
-
-            if (jeu.g.checkGrillefull())
+            }
+            else
             {
-                vainqueur = true; // <- optionnel mais pour que ce soit joli je le met
-                return "ex aequo";
+                j2 = new Joueur("IA");
             }
 
+        Joueur[] joueurs = new Joueur[2];
+        joueurs[0] = j1;
+        joueurs[1] = j2;
 
-            entrerCoup(jeu, ihm, j);
-
-            if (jeu.win(j)) {
-
-                vainqueur = true;
-                return j.nom;
-            }
-
-
-            if (jeu.g.checkGrillefull())  // <- necessaire de nouveau ici car à la fin quand le joueur joue et complete la grille, c'est après le tour de l'ia et pour je ne sais qu'elle raison, cette dernière, après changé le pion du haut à gauche par son pion donc pour éviter ce bug je refait cette vérif et mtn ça marche (je l'ai tester)
-            {
-                vainqueur = true; // <- optionnel mais pour que ce soit joli je le met
-                return "ex aequo";
-            }
-
-            iaBrain.entrerCoupIA(jeu, ia, j);
-            ihm.displayGrille(jeu);
-
-            if (jeu.win(ia)) {
-                vainqueur = true;
-                return ia.nom;
-            }
-
-
-            // Tant qu'on ne trouve pas de vainqueur on boucle
-        } while (!(vainqueur));
-
-        return "Erreur innatendue Controleur -> meth :loopGame ";  // <- On met ce return pour les mêmes raison que la méthode userInputChoiceGame dans la class IHM
-    }
-
-
-
-
-
-
-
-//==============================================Methode_pour_jouer_MultiJoueur=============================
-
-    public void lancerJeuMulti(IHM ihm, Joueur j1)
-    {
-
-        Joueur j2 = new Joueur(ihm.UserInputName());
-
-        int choicePlayerG = ihm.UserInputChoiceGame();
-        Jeu jeu = creationJeu(choicePlayerG);
-
-        int cptNbPartie = 0;
-
-
-        while (newGame(ihm)) {
-
-            cptNbPartie++;
-            String res = loopGame(jeu, ihm, j1, j2);
-            save.ajouterRes(res);
-            ihm.affichierGagnant(res);
-            jeu.g.clearGrille();
-
-        }
-
-        if (cptNbPartie ==0 )
-        {
-            ihm.aucunePartieJouer();
-            return;  // <- le return pour mettre fin au programme
-        }
-        else if(save.affichMap().length == 0)
-        {
-            ihm.aucunePartiegagne();
-        }
-        else
-        {
-            ihm.affichageScoreJeu(save.affichMap());
-            ihm.nameVainqueur(save.CalculerVainqueur());
-        }
+        return joueurs;
 
     }
-
 
     public void entrerCoup(Jeu jeu, IHM ihm, Joueur j) {
         boolean coupValid = false;
@@ -214,13 +133,25 @@ public class Controleur {
 
     }
 
+    public String loopGame(Jeu jeu, Joueur j1, Joueur j2, BrainIA iaBrain)
+    {
+        // On regarde si le j1 a saisi l'option multiJoueur ou IA et si c'est
+        // l'ia alors le j2 est automatiquement renommer IA d'où ce que je fait en dessous
+        // on stockera ensuite cela dans une var qu'on réutilise ligne : 169
+        boolean ia = false;
+        if (j2.getNom().equals("IA")) // On supposera que si le j1 selection le multijoueur alors j2 ne se nommera jamais IA
+        {
+            ia = true;
+        }
 
-    public String loopGame(Jeu jeu, IHM ihm, Joueur j1, Joueur j2) {
+
         boolean vainqueur = false;
         do {
 
+            // j1 joue son coup
             entrerCoup(jeu, ihm, j1);
 
+            // On vérif si j1 a gagné après son coup
             if (jeu.win(j1)) {
 
                 vainqueur = true;
@@ -234,12 +165,24 @@ public class Controleur {
             }
 
 
-            entrerCoup(jeu, ihm, j2);
+            // si oui l'ia joue
+            if (ia)
+            {
+                iaBrain.entrerCoupIA(jeu, j2, j1);
+                ihm.displayGrille(jeu);
+            }
+            // sinon, le j2 joue son coup
+            else
+            {
+                entrerCoup(jeu, ihm, j2);
+            }
 
+            // On vérif si l'ia ou j2 a gagné après son coup.
             if (jeu.win(j2)) {
                 vainqueur = true;
                 return j2.nom;
             }
+
 
 
             // Tant qu'on ne trouve pas de vainqueur on boucle

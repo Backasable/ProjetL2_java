@@ -171,7 +171,7 @@ public class IHM {
                     throw new ChoiceGameException("Veuillez saisir une choix valide ");
 
                 }
-                // Ce le prog arrive ici ça veut dire que user a rentré un choix valide
+                // Si le prog arrive ici ça veut dire que user a rentré un choix valide
                 else
                 {
                     return choix;
