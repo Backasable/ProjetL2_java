@@ -217,7 +217,7 @@ public class BrainIA {
     public void entrerCoupIAM(Jeu jeu, Joueur ia, Joueur j)
     {
         // Si on a pas 4 case vide restante alors :
-        if (!(jeu.g.compteurCaseVide() > 4))
+        if (jeu.g.compteurCaseVide() > 4)
         {
             // Si le joueur s'apprête à gagner l'ia joue sur la case qui fera gagner le joueur
             int[] caseGagantJ = verifwinM(jeu, j);
@@ -256,7 +256,7 @@ public class BrainIA {
 
         else
         {
-            int[] coupIA = meilleurCoup(jeu, j, ia);
+            int[] coupIA = meilleurCoup(jeu, ia, j);
             placement(coupIA, ia);
         }
 
@@ -280,8 +280,73 @@ public class BrainIA {
 
     public int[] meilleurCoup(Jeu jeu, Joueur ia, Joueur j)
     {
+        ArrayList<int[]> coupPossible = recupCoordCaseVide();
+        int[] meilleurCoup = new int[2];
+        int bestscore = -23456789;
 
+        for (int[] coup : coupPossible)
+        {
+            placement(coup, ia);
+            int score = minmax(coup, ia, j, jeu, false);
+            if ( score > bestscore )
+            {
+                bestscore = score;
+                meilleurCoup = coup;
+            }
+            annulerCoup(coup);
+
+        }
+        return meilleurCoup;
     }
+
+    private int  minmax(int[] coup, Joueur ia, Joueur j, Jeu jeu, boolean maximiseur)
+    {
+        ArrayList<int[]> coupPossible = recupCoordCaseVide(); // <- on recherche les coup possible une nouvelle fois
+
+        while(evaluer(jeu, j, ia)==2)  // <- tant qu'on a pas de vainqueur ou d'exaeqo on boucle
+        {
+            if (maximiseur) // <- tour de l'ia de jouer
+            {
+                for (int[] coups : coupPossible) {
+                    placement(coups, ia);
+                    int score = minmax(coups, ia, j, jeu, false);
+                    annulerCoup(coups);
+                    return score;
+                }
+
+            } else  // <- tour du joueur du jouer
+            {
+                for (int[] coups : coupPossible) {
+                    placement(coups, j);
+                    int score = minmax(coups, ia, j, jeu, true);
+                    annulerCoup(coups);
+                    return score;
+                }
+            }
+        }
+        return evaluer(jeu, j, ia);
+    }
+
+    private int evaluer(Jeu jeu, Joueur j, Joueur ia)
+    {
+        if (jeu.win(j))
+        {
+            return -1;
+        }
+        else if(jeu.win(ia))
+        {
+            return 1;
+        }
+        else if (g.checkGrillefull())
+        {
+            return 0;
+        }
+        else
+        {
+            return 2;   // <- valeur renvoyer par evaluer si aucune des autre condi n'est vrai (PS : j'aurai voulut mettre null met ça marche pas donc j'ai prit 2)
+        }
+    }
+
 
     public void entrerCoupIAP(Jeu jeu, Joueur ia, Joueur j) {
 
@@ -350,11 +415,16 @@ public class BrainIA {
         }
     }
 
-    public void placement(int[] coord, Joueur j)
+// pk je les met en private ? car le controleur n'a pas à savoir ces méthodes qui sont utilisées uniqT dans cette class BrainIA
+    private void placement(int[] coord, Joueur j)
     {
         g.plateau[coord[0]][coord[1]] =j.idJoueur;
     }
 
+    private void annulerCoup(int[] coord)
+    {
+        g.plateau[coord[0]][coord[1]] = 0;
+    }
 
 
 
