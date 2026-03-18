@@ -119,6 +119,12 @@ public class Controleur {
             }
 
 
+            if (jeu.g.checkGrillefull())
+            {
+                vainqueur = true; // <- optionnel mais pour que ce soit joli je le met
+                return "ex aequo";
+            }
+
             iaBrain.entrerCoupIA(jeu, ia, j);
             ihm.displayGrille(jeu);
 
