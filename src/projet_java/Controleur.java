@@ -119,7 +119,7 @@ public class Controleur {
             }
 
 
-            if (jeu.g.checkGrillefull())
+            if (jeu.g.checkGrillefull())  // <- necessaire de nouveau ici car à la fin quand le joueur joue et complete la grille, c'est après le tour de l'ia et pour je ne sais qu'elle raison, cette dernière, après changé le pion du haut à gauche par son pion donc pour éviter ce bug je refait cette vérif et mtn ça marche (je l'ai tester)
             {
                 vainqueur = true; // <- optionnel mais pour que ce soit joli je le met
                 return "ex aequo";
