@@ -282,7 +282,7 @@ public class BrainIA {
     {
         ArrayList<int[]> coupPossible = recupCoordCaseVide();
         int[] meilleurCoup = new int[2];
-        int bestscore = -23456789;
+        int bestscore = -23456789;     // <- comme on veut que l'ia ait le plus haut score, alors on initialise le sien avec le plus bas possible
 
         for (int[] coup : coupPossible)
         {
