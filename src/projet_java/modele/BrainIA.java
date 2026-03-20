@@ -300,7 +300,7 @@ public class BrainIA {
                 bestscore = score;
                 meilleurCoup = coup;
             }
-            annulerCoup(coup, g);
+            annulerCoup(coup);
 
         }
         return meilleurCoup;
@@ -317,7 +317,7 @@ public class BrainIA {
                 for (int[] coups : coupPossible) {
                     placement(coups, ia);
                     int score = minmax(coups, ia, j, jeu, false);
-                    annulerCoup(coups, g);
+                    annulerCoup(coups);
                     return score;
                 }
 
@@ -326,7 +326,7 @@ public class BrainIA {
                 for (int[] coups : coupPossible) {
                     placement(coups, j);
                     int score = minmax(coups, ia, j, jeu, true);
-                    annulerCoup(coups, g);
+                    annulerCoup(coups);
                     return score;
                 }
             }
@@ -398,7 +398,7 @@ public class BrainIA {
     }
 
     // Dans la situation où notre colonne serait plein cette méthode intervient ! et vérifie si c'est le cas en regardant si la case où va tomber notre pion il y aura déjà un pion
-    public boolean verifColpleine(int[] coord) /*ajouter Grille g en paramêtre*/
+    public boolean verifColpleine(int[] coord)
     {
         if (g.plateau[coord[0]][coord[1]] != 0)
         {
@@ -427,7 +427,7 @@ public class BrainIA {
         g.plateau[coord[0]][coord[1]] =j.idJoueur;
     }
 
-    private void annulerCoup(int[] coord, Grille g) /*ajouter Grille g en paramêtre*/
+    private void annulerCoup(int[] coord)
     {
         g.plateau[coord[0]][coord[1]] = 0;
     }
