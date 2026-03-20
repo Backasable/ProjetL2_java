@@ -63,7 +63,7 @@ public class BrainIA {
     // équivalent du verifWinM mais pour le puissance 4
     // C'est à dire qu'elle simule le fait qu'un joueur va jouer et teste tout les colonne
     // Si il y a un moment où le pion du joueur tombe dans une case qui lui permet d'obtenir la victoire, alors on
-    public int[]  verifwinP(Jeu jeu, Joueur j)
+    /*public int[]  verifwinP(Jeu jeu, Joueur j)
     {
         for (int col = 0; col<g.getNbcol(); col++)
         {
@@ -101,7 +101,7 @@ public class BrainIA {
             }
         }
         return null;
-    }
+    }*/
 
 
     // On récupe les coord d'un coin qui est vide
@@ -300,7 +300,7 @@ public class BrainIA {
                 bestscore = score;
                 meilleurCoup = coup;
             }
-            annulerCoup(coup);
+            annulerCoup(coup, g);
 
         }
         return meilleurCoup;
@@ -317,7 +317,7 @@ public class BrainIA {
                 for (int[] coups : coupPossible) {
                     placement(coups, ia);
                     int score = minmax(coups, ia, j, jeu, false);
-                    annulerCoup(coups);
+                    annulerCoup(coups, g);
                     return score;
                 }
 
@@ -326,7 +326,7 @@ public class BrainIA {
                 for (int[] coups : coupPossible) {
                     placement(coups, j);
                     int score = minmax(coups, ia, j, jeu, true);
-                    annulerCoup(coups);
+                    annulerCoup(coups, g);
                     return score;
                 }
             }
@@ -355,12 +355,12 @@ public class BrainIA {
     }
 
 
-    public void entrerCoupIAP(Jeu jeu, Joueur ia, Joueur j) {
+    public void entrerCoupIAP(Jeu jeu, Joueur ia, Joueur j) { /*enlève Joueur j*/
 
         // On vérif d'abord si le Joueur lors de son prochain coup pourrait gagné et si c'est le cas, l'ia joue la case qu'il était sensé jouer
-        int[] caseGagnantJ = verifwinP(jeu, j);
+        /*int[] caseGagnantJ = verifwinP(jeu, j);
 
-        if (caseGagnantJ != null) {
+        if (caseGagnantJ != nuuall) {
             placement(caseGagnantJ, ia);
             return; // <- on met fin à la fct
         }
@@ -371,7 +371,7 @@ public class BrainIA {
             int[] caseGagnantIA = verifwinP(jeu, ia);
             placement(caseGagnantIA, ia);
         }
-        else {
+        else {*/
 
             int col;
             int[] caseVide;
@@ -388,7 +388,7 @@ public class BrainIA {
             placement(caseVide, ia);
 
         }
-    }
+
 
 
 
@@ -398,7 +398,7 @@ public class BrainIA {
     }
 
     // Dans la situation où notre colonne serait plein cette méthode intervient ! et vérifie si c'est le cas en regardant si la case où va tomber notre pion il y aura déjà un pion
-    public boolean verifColpleine(int[] coord)
+    public boolean verifColpleine(int[] coord) /*ajouter Grille g en paramêtre*/
     {
         if (g.plateau[coord[0]][coord[1]] != 0)
         {
@@ -418,17 +418,16 @@ public class BrainIA {
         }
         else if( jeu instanceof Puissance_4)
         {
-            entrerCoupIAP(jeu, ia,j);
+            entrerCoupIAP(jeu, ia, j);
         }
     }
 
 // pk je les met en private ? car le controleur n'a pas à savoir ces méthodes qui sont utilisées uniqT dans cette class BrainIA
-    private void placement(int[] coord, Joueur j)
-    {
+    private void placement(int[] coord, Joueur j){
         g.plateau[coord[0]][coord[1]] =j.idJoueur;
     }
 
-    private void annulerCoup(int[] coord)
+    private void annulerCoup(int[] coord, Grille g) /*ajouter Grille g en paramêtre*/
     {
         g.plateau[coord[0]][coord[1]] = 0;
     }
