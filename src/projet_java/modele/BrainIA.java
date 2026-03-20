@@ -289,13 +289,8 @@ public class BrainIA {
             placement(coup, ia);
             int score = minmax(coup, ia, j, jeu, false);
 
-            // le problème c'est que minimax considère les cas où l'ia évite le coup
-            if (score == 0)
-            {
-                bestscore = score;
-                meilleurCoup = coup;
-            }
-            else if ( score > bestscore)
+
+            if ( score > bestscore)
             {
                 bestscore = score;
                 meilleurCoup = coup;
@@ -310,28 +305,51 @@ public class BrainIA {
     {
         ArrayList<int[]> coupPossible = recupCoordCaseVide(); // <- on recherche les coup possible une nouvelle fois
 
-        while(evaluer(jeu, j, ia)==2)  // <- tant qu'on a pas de vainqueur ou d'exaeqo on boucle
+        int bestscore;
+
+        if (maximiseur)
         {
-            if (maximiseur) // <- tour de l'ia de jouer
+            bestscore = -1235465678;   // <- on veut le meilleur score donc on commence au plus bas
+        }
+        else
+        {
+            bestscore = 12345678; // <- on veut le plus petit score donc on commence au plus haut
+        }
+
+        int eval = evaluer(jeu, j, ia);
+        if(eval == 2)  // <- tant qu'on a pas de vainqueur ou d'exaeqo on boucle
+        {
+            if (maximiseur) // <- tour de l'ia de jouer elle veut maximiser
             {
                 for (int[] coups : coupPossible) {
                     placement(coups, ia);
                     int score = minmax(coups, ia, j, jeu, false);
                     annulerCoup(coups);
-                    return score;
-                }
 
-            } else  // <- tour du joueur du jouer
+                    if (score > bestscore)  // On calcule le score sachant qu'on veut le maximiser
+                    {
+                        bestscore = score;
+                    }
+                }
+                return bestscore;
+
+            } else  // <- tour du joueur du jouer lui il veut minimiser
             {
                 for (int[] coups : coupPossible) {
                     placement(coups, j);
                     int score = minmax(coups, ia, j, jeu, true);
                     annulerCoup(coups);
-                    return score;
+
+                    if (score < bestscore)  // On calcule le score sachant qu'on veut le minimiser
+                    {
+                        bestscore = score;
+                    }
+
                 }
+                return bestscore;
             }
         }
-        return evaluer(jeu, j, ia);
+        return eval;
     }
 
     private int evaluer(Jeu jeu, Joueur j, Joueur ia)
