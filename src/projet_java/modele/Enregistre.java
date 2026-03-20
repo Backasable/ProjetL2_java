@@ -75,7 +75,7 @@ public class Enregistre
         // On gère le cas où : 1 joueur à gagné tout les parties
         else if (keytab.length == 1)
         {
-            return keytab[0]+" avec " + this.dico.get(keytab[0])+ " de partie gagné";
+            return keytab[0]+" avec " + this.dico.get(keytab[0])+ " Victoire ";
         }
 
         // Note 1 : avec == Java ne fait pas l'unboxing automatiquement,
@@ -94,11 +94,11 @@ public class Enregistre
         // On gère le cas où les 2 joueur on au moin gagné 1 partie
         else if (this.dico.get(keytab[0]) > this.dico.get(keytab[1]))
         {
-            return keytab[0]+ "avec " + this.dico.get(keytab[0])+ " de partie gagné";
+            return keytab[0]+ " avec " + this.dico.get(keytab[0])+ " Victoire";
         }
         else
         {
-            return keytab[1] + "avec " +this.dico.get(keytab[1]+ " de partie gagné");
+            return keytab[1] + " avec " +this.dico.get(keytab[1]+ " Victoire");
         }
     }
 }

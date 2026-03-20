@@ -288,7 +288,14 @@ public class BrainIA {
         {
             placement(coup, ia);
             int score = minmax(coup, ia, j, jeu, false);
-            if ( score > bestscore )
+
+            // le problème c'est que minimax considère les cas où l'ia évite le coup
+            if (score == 0)
+            {
+                bestscore = score;
+                meilleurCoup = coup;
+            }
+            else if ( score > bestscore)
             {
                 bestscore = score;
                 meilleurCoup = coup;
