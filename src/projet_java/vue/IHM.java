@@ -213,7 +213,7 @@ public class IHM {
             }
             else
             {
-                System.out.println("\n Veuillez saisir :y ou n !!!");
+                System.out.println("\nVeuillez saisir : y ou n !!!");
             }
 
         }
