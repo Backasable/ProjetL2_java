@@ -463,7 +463,7 @@ Si on reprend notre arbre :
 -1       0       +1      0      +1      -1
 
 l'ago minimax va uniquement parcourir pour chaque coup identifier dans 
-la méthode meilleurCoup : (je fait reférence à ces coups là : ( (2,3) ; (3,1) ; (3,2) ))
+la méthode meilleurCoup ( PS, je fait reférence à ces coups là : ( (2,3) ; (3,1) ; (3,2) ))
 UNIQUEMENT leur branche gauche respective
 Donc pour le coup (2,3) par exemple, 
 ce sera cette branche là qui sera parcourue Uniquement :
