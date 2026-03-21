@@ -385,10 +385,273 @@ Gestion des jetons poussance 4 J R  et Morpion c'est X O  __completed !
 
 
 
-Modification DDCS : 
+Explication du code minimax pourquoi cela "marché" même si on l'avait mal implémenté :
+Raison : 
+    - 1 : car on l'appliquer sur un morpion donc on avait pas beaucoup de cas à traiter donc on voyait pas réellement le cas d'erreur 
+    
+Explication de ce qu'il manqué au minimax pourqu'il soit bien implémenté : 
 
-Ajoute methode choiceModeJeu dans IHM
-ajoute methode lancerMulti dans Controleur 
-ajoute méthode verifWin dans morpion 
-ajoute prendreCoin dans Morpion
+Supposons qu'il reste 3 case vide et que c'est le tour de l'ia
+   1 2 3
+1| X O X |
+2| O X - |
+3| - - O |
 
+On a l'arbre suivant que le prog va devoir parcourir :
+       [IA joue - MAX]
+     /       |       \
+(2,3)       (3,1)      (3,2)
+|             |           |
+[X joue-MIN]  [X joue-MIN] [X joue-MIN]
+/     \         /     \       /      \
+(3,1)  (3,2)   (2,3)  (3,2)  (2,3)   (3,1)
+|        |       |      |      |        |
+[IA-MAX][IA-MAX][IA-MAX][IA-MAX][IA-MAX][IA-MAX]
+|        |        |      |      |        |
+(3,2)  (3,1)     (3,2)  (2,3)  (3,1)   (2,3)
+|        |        |      |      |        |
+-1       0       +1      0      +1      -1
+
+Si on applique l'ancienne algo : 
+
+    private int  minmax(int[] coup, Joueur ia, Joueur j, Jeu jeu, boolean maximiseur)
+    {
+        ArrayList<int[]> coupPossible = recupCoordCaseVide(); // <- on recherche les coup possible une nouvelle fois
+
+        while(evaluer(jeu, j, ia)==2)  // <- tant qu'on a pas de vainqueur ou d'exaeqo on boucle
+        {
+            if (maximiseur) // <- tour de l'ia de jouer
+            {
+                for (int[] coups : coupPossible) {
+                    placement(coups, ia);
+                    int score = minmax(coups, ia, j, jeu, false);
+                    annulerCoup(coups);
+                    return score;          // <- /!\ cette ligne là est le problème 
+                }
+
+            } else  // <- tour du joueur du jouer
+            {
+                for (int[] coups : coupPossible) {
+                    placement(coups, j);
+                    int score = minmax(coups, ia, j, jeu, true);
+                    annulerCoup(coups);
+                    return score;          // <- /!\ cette ligne là est le problème 
+                }
+            }
+        }
+        return evaluer(jeu, j, ia);
+    }
+
+Pourquoi cette ligne là est le problème : return score; 
+
+Car elle est placé au mauvais endroit !!!
+
+Si on reprend notre arbre : 
+
+       [IA joue - MAX]
+     /       |       \
+(2,3)       (3,1)       (3,2)
+|             |              |
+[X joue-MIN]  [X joue-MIN] [X joue-MIN]
+/     \         /     \       /      \
+(3,1)  (3,2)   (2,3)  (3,2)  (2,3)   (3,1)
+|        |       |      |      |        |
+[IA-MAX][IA-MAX][IA-MAX][IA-MAX][IA-MAX][IA-MAX]
+|        |        |      |      |        |
+(3,2)  (3,1)     (3,2)  (2,3)  (3,1)   (2,3)
+|        |        |      |      |        |
+-1       0       +1      0      +1      -1
+
+l'ago minimax va uniquement parcourir pour chaque coup identifier dans 
+la méthode meilleurCoup : (je fait reférence à ces coups là : ( (2,3) ; (3,1) ; (3,2) ))
+UNIQUEMENT leur branche gauche respective
+Donc pour le coup (2,3) par exemple, 
+ce sera cette branche là qui sera parcourue Uniquement :
+
+(2,3)
+|
+[X joue-MIN]   <- tour du joueur de jouer
+/
+(3,1)
+|  
+[IA-MAX]   <- tour de l'ia de jouer
+|
+(3,2)
+|
+-1  
+
+La branche de droite ne sera jamais parcourue 
+Donc il nous suffirai de mettre à la bonne place : return score
+Alors faisons le !! : 
+Voici l'algo corrigé : 
+
+    private int  minmax(int[] coup, Joueur ia, Joueur j, Jeu jeu, boolean maximiseur)
+    {
+        ArrayList<int[]> coupPossible = recupCoordCaseVide(); // <- on recherche les coup possible une nouvelle fois
+
+        if (evaluer(jeu, j, ia)==2)  // <- /!\ Note : J'ai changer le while en un if car la while ne sert à rien ici car on veut juste vérifié si on a atteint le fond de la récursion (c'est notre cas de base ici) while serait même dangereux pour crée des bug et rajoute une charge de travaille suplémentaire  
+        {
+            if (maximiseur) // <- tour de l'ia de jouer
+            {
+                for (int[] coups : coupPossible) {
+                    placement(coups, ia);
+                    int score = minmax(coups, ia, j, jeu, false);
+                    annulerCoup(coups);
+                            
+                }
+
+            return score;  // <- mtn, en mettant : return score ici on parcoure aussi la branche de droite (donc on regarde aussi, les autres coup que peut jouer le joueur)
+
+            } else  // <- tour du joueur du jouer
+            {
+                for (int[] coups : coupPossible) 
+                {
+                    placement(coups, j);
+                    int score = minmax(coups, ia, j, jeu, true);
+                    annulerCoup(coups);
+                             
+                }
+            return score; // <- pareil ici mtn, on peut aussi regarder les autre coup que peut joué l'ia (Note : si le prog arrive ici il ne reste plus qu'une case vide à joué donc c'est pas vraiment util mais si on prend un plateau plus grand ça change la donne)
+            }
+        }
+        return evaluer(jeu, j, ia);
+    }
+
+Mtn : on pourrait pensé qu'on a terminé sauf qu'il nous manque une chose important ! 
+Lorqu'on a atteint la fin d'une branche et qu'on remonte dans l'arbre avec les scores 
+Comment fait-on pour les comparer ? 
+
+Si on est dans cette situatino comment on fait : 
+
+       [IA joue - MAX]
+     /       |       \
+(2,3)       (3,1)       (3,2)
+|             |              |
+[X joue-MIN]  [X joue-MIN]    [X joue-MIN]
+  /    \         /   \            /     \
+(3,1)  (3,2)   (2,3)  (3,2)     (2,3)   (3,1)
+|        |       |      |          |       |
+-1       0       -1     +1        +1       -1     
+
+On fait Comment ? pour comparer les scores et remonter celui qui nous interesse ? 
+
+==================================================================================
+Avant de se poser la question comprenons comment l'algo minmax gère les scores pour les remonter
+
+Supposons qu'on est dans la branche de gauche de l'arbre au dessus,
+et que le Joueur du coup (vu que c'est son tour) joue (3,1)
+L'algo va ensuite descendre dans la récursion donc 
+il va aller, ici dans l'algo : int score = minmax(coups, ia, j, jeu, true);
+Ensuite, il s'aperçois grâce à cette ligne : if (evaluer(jeu, j, ia)==2)   
+Que la grille est pleine ! 
+Donc il va aller ici : return evaluer(jeu, j, ia); 
+Et retourner le score 
+Ensuite on remonte dans la récursion avec le score : -1  
+
+ET on retourne dans cette partie de l'aglo vu que le dernier qui a joué c'était le joueur :
+
+            } else  // <- tour du joueur du jouer
+            {
+                for (int[] coups : coupPossible)    // Etape 3 : On va regarde le 2 ème coup possible ici : (3,2)  
+                {
+                    placement(coups, j);
+                    int score = minmax(coups, ia, j, jeu, true);   // <- Etape 1: on se retrouve ici dans l'algo !!! avec notre -1 déterminé dans la récursion d'avant  
+                    annulerCoup(coups);      // Etape 2 : on annule le coup ici (3,1)
+                                               
+                }
+            return score; // <- pareil ici mtn, on peut aussi regarder les autre coup que peut joué l'ia (Note : si le prog arrive ici il ne reste plus qu'une case vide à joué donc c'est pas vraiment util mais si on prend un plateau plus grand ça change la donne)
+            }
+
+!!! Mais On a oublie Un étape Crucial !!!   Que fait on avec le score qu'on a reçus dans l'Etape 1 ???
+
+parce que si laisse cela comme ça, là : int score = -1 mais 
+Lorqu'on aura fini de regarder l'autre coup possible ici (3,2) et qu'on va remonté avec le score de se coup ici 0
+Alors la valeur de la variable score qui était de -1 sera écrasé par 0
+Et nous on veut pas ça !
+Car nous ce qu'on veut c'est les comparer les scores !!! pas les écrasés
+En respectant la règle : 
+Si c'est maximiseur donc l'ia on veut le plus haut score 
+et,
+Si c'est le minimiseur donc le joueur (Note : quand maximisuer vaut false c'est équivalant au minimiseur)
+On veut le plus bas score.  ( Car le Joueur doit faire en sorte que l'ia perde !!! donc il préfèrera choisir des scores comme -1 où là c'est lui qui gagne !! )
+
+Donc ce qu'on va faire c'est avoir un bestscore dans les 2 cas : maximiser, minimiseur
+
+Si c'est le cas 1 : maximiseur, bestscore sera initialisé à la valeur la plus basse (afin d'avoir la valeur la plus haute on commence par la plus basse)
+
+Si c'est le cas 2 : minimiseur, bestscore sera initialisé à la valeur la plus haute (afin d'avoir la valeur la plus basse possible on commence par la plus haute)
+
+et à chaque fois qu'on remonte dans la récursion, on va comperer la valeur qu'on remonte avec celle du bestscore de chaque cas 
+
+Et ensuite, une fois qu'on a regarder tous les coup possible ici : (3,1) et (3,2) (vu que pour rappel on a supposé au début qu'on était dans la branche de gauche) 
+C'est à dire, qu'on a fait toutes les itérations de la boucle : for (int[] coups : coupPossible) 
+Alors, on peut retourner bestScore ici entre -1 et 0 joueur va prendre -1 
+Et ensuite, on est dans cette situation :
+
+
+       [IA joue - MAX]
+   -1 /       |       \
+(2,3)       (3,1)       (3,2)
+
+Donc là, le bestscore de l'IA est toujours initialisé avec la plus basse valeur possible 
+PK ? :
+c'est parce que chaque appel récursif crée ses propres variables 
+locales indépendantes. Le bestscore de la récursion du bas et celui de 
+la récursion du haut sont deux variables différentes en mémoire
+
+De ce fait, on a jamais touché au bestScore de l'ia du haut pour cette récursion 
+d'où le fait qu'elle soit toujours initialisé avec la plus petit valeur 
+
+Ainsi on mettant en place ces changements, on a l'algo suivant : 
+
+
+    private int  minmax(int[] coup, Joueur ia, Joueur j, Jeu jeu, boolean maximiseur)
+    {
+    ArrayList<int[]> coupPossible = recupCoordCaseVide(); // <- on recherche les coup possible une nouvelle fois
+    
+        int eval = evaluer(jeu, j, ia);
+        if (eval==2)
+        {
+            if (maximiseur) // <- tour de l'ia de jouer
+            {
+                int bestScore = -2345654321; // on initialise au plus bas car on veut le plus haut score
+                
+                for (int[] coups : coupPossible) {
+                    placement(coups, ia);
+                    int score = minmax(coups, ia, j, jeu, false);
+                    annulerCoup(coups);
+    
+                    if (score > bestScore)
+                    {
+                        bestScore = score;
+                    }
+                    
+                }
+    
+                return score;
+            } else  // <- tour du joueur du jouer
+            {
+                int bestScore = 3456754; // On initilalise au plus haut afin de d'obtenir le plus bas score
+                
+                for (int[] coups : coupPossible)
+                {
+                    placement(coups, j);
+                    int score = minmax(coups, ia, j, jeu, true);
+                    annulerCoup(coups);
+                    
+                    // Lorsqu'on remonte, on compare bien les score
+                    if (score < bestScore)
+                    {
+                        bestScore = score;
+                    }
+    
+                }
+                return score; 
+            }
+        }
+        return eval;
+    }
+
+// Note : il y a un complément sur une feuille qui détaille une partie avec une fork (pour le morpion) 
+et comme l'ia est condannée (car tous les coup qu'elle a évalué sont à -1, et au lieu de faire en sorte de me bloqué, 
+elle va joué son premier coup qu'elle a évalué à -1 regarde la feuille j'ai fait une explication 

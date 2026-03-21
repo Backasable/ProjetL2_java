@@ -296,6 +296,8 @@ public class BrainIA {
                 meilleurCoup = coup;
             }
             annulerCoup(coup);
+            System.out.println("score : " +score);
+            System.out.println( "bestscore : "+ bestscore);
 
         }
         return meilleurCoup;
@@ -305,53 +307,53 @@ public class BrainIA {
     {
         ArrayList<int[]> coupPossible = recupCoordCaseVide(); // <- on recherche les coup possible une nouvelle fois
 
-        int bestscore;
-
-        if (maximiseur)
-        {
-            bestscore = -1235465678;   // <- on veut le meilleur score donc on commence au plus bas
-        }
-        else
-        {
-            bestscore = 12345678; // <- on veut le plus petit score donc on commence au plus haut
-        }
-
         int eval = evaluer(jeu, j, ia);
-        if(eval == 2)  // <- tant qu'on a pas de vainqueur ou d'exaeqo on boucle
+        if (eval==2)
         {
-            if (maximiseur) // <- tour de l'ia de jouer elle veut maximiser
+            if (maximiseur) // <- tour de l'ia de jouer
             {
+                int bestScore = -23456541; // on initialise au plus bas car on veut le plus haut score
+
                 for (int[] coups : coupPossible) {
                     placement(coups, ia);
                     int score = minmax(coups, ia, j, jeu, false);
                     annulerCoup(coups);
 
-                    if (score > bestscore)  // On calcule le score sachant qu'on veut le maximiser
+                    if (score > bestScore)
                     {
-                        bestscore = score;
+                        bestScore = score;
                     }
-                }
-                return bestscore;
+                   // System.out.println(bestScore + " bestscore ia ");
 
-            } else  // <- tour du joueur du jouer lui il veut minimiser
+                }
+
+
+                return bestScore;
+
+            } else  // <- tour du joueur du jouer
             {
-                for (int[] coups : coupPossible) {
+                int bestScore = 3456754; // On initilalise au plus haut afin de d'obtenir le plus bas score
+
+                for (int[] coups : coupPossible)
+                {
                     placement(coups, j);
                     int score = minmax(coups, ia, j, jeu, true);
                     annulerCoup(coups);
 
-                    if (score < bestscore)  // On calcule le score sachant qu'on veut le minimiser
+                    // Lorsqu'on remonte, on compare bien les score
+                    if (score < bestScore)
                     {
-                        bestscore = score;
+                        bestScore = score;
                     }
+                    //System.out.println(bestScore + " bestscore J ");
 
                 }
-                return bestscore;
+
+                return bestScore;
             }
         }
         return eval;
     }
-
     private int evaluer(Jeu jeu, Joueur j, Joueur ia)
     {
         if (jeu.win(j))
