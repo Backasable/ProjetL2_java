@@ -79,8 +79,9 @@ public class Enregistre
         }
 
         // Note 1 : avec == Java ne fait pas l'unboxing automatiquement,
-        // il compare les références des objets Integer,
-        // Donc afin d'éviter des problème on cast en int
+        // Donc : sans le cast, == compare des références d'objets ici Integer.
+        // Avec le cast (int) on fait de l'unboxing c'est à dire qu'on convertie
+        // l'objet de type référence en type primitif
 
         else if(((int)this.dico.get(keytab[0]) == (int)this.dico.get(keytab[1])))
         {
@@ -98,7 +99,8 @@ public class Enregistre
         }
         else
         {
-            return keytab[1] + " avec " +this.dico.get(keytab[1]+ " Victoire");
+            return keytab[1] + " avec " + this.dico.get(keytab[1])+ " Victoire";
         }
+
     }
 }
