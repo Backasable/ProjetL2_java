@@ -7,25 +7,8 @@ public class Puissance4_IA extends BrainIA
        super(g, difficulte);
     }
 
-
-    public void entrerCoupIA(Jeu jeu, Joueur ia, Joueur j) { /*enlève Joueur j*/
-
-        // On vérif d'abord si le Joueur lors de son prochain coup pourrait gagné et si c'est le cas, l'ia joue la case qu'il était sensé jouer
-        /*int[] caseGagnantJ = verifwinP(jeu, j);
-
-        if (caseGagnantJ != null) {
-            placement(caseGagnantJ, ia);
-            return; // <- on met fin à la fct
-        }
-
-        // Si l'ia peut gagné
-        if (verifwinP(jeu, ia) != null)
-        {
-            int[] caseGagnantIA = verifwinP(jeu, ia);
-            placement(caseGagnantIA, ia);
-        }
-        else {*/
-
+    public void entrerCoupIARandom(Jeu jeu, Joueur ia)
+    {
         int col;
         int[] caseVide;
 
@@ -39,8 +22,40 @@ public class Puissance4_IA extends BrainIA
 
         ia.setcaseTrouverCoord(caseVide);  // On a besoin de cela pour le win du puissance 4 qui va chercher dans cette attribue la valeur dont il a besoin
         placement(caseVide, ia);
-
     }
+
+    public void entrerCoupIaIntel(Jeu jeu, Joueur ia, Joueur j)
+    {
+        // On vérif d'abord si le Joueur lors de son prochain coup pourrait gagné et si c'est le cas, l'ia joue la case qu'il était sensé jouer
+        int[] caseGagnantJ = verifwinP(jeu, j);
+
+        if (caseGagnantJ != null) {
+            placement(caseGagnantJ, ia);
+            return; // <- on met fin à la fct
+        }
+
+        // Si l'ia peut gagné
+        if (verifwinP(jeu, ia) != null) {
+            int[] caseGagnantIA = verifwinP(jeu, ia);
+            placement(caseGagnantIA, ia);
+
+
+        }
+    }
+
+
+    public void entrerCoupIA(Jeu jeu, Joueur ia, Joueur j)
+    {
+        if (difficulte.getNiv_diff()==1)
+        {
+            entrerCoupIARandom(jeu, ia);
+        }
+        else
+        {
+            entrerCoupIaIntel(jeu, ia, j);
+        }
+    }
+
 
 
 
@@ -66,7 +81,7 @@ public class Puissance4_IA extends BrainIA
     // équivalent du verifWinM mais pour le puissance 4
     // C'est à dire qu'elle simule le fait qu'un joueur va jouer et teste tout les colonne
     // Si il y a un moment où le pion du joueur tombe dans une case qui lui permet d'obtenir la victoire, alors on
-    /*public int[]  verifwinP(Jeu jeu, Joueur j)
+    public int[]  verifwinP(Jeu jeu, Joueur j)
     {
         for (int col = 0; col<g.getNbcol(); col++)
         {
@@ -104,7 +119,7 @@ public class Puissance4_IA extends BrainIA
             }
         }
         return null;
-    }*/
+    }
 
 
     private void placement(int[] coord, Joueur j){
