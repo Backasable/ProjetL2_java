@@ -150,7 +150,7 @@ public class MorpionIA extends BrainIA
     }
 
 
-    public void entrerCoupIA(Jeu jeu, Joueur ia, Joueur j)
+    public void entrerCoupIAIntelegente(Jeu jeu, Joueur ia, Joueur j)
     {
         // Si on a pas 4 case vide restante alors :
         if (jeu.g.compteurCaseVide() > 4)
@@ -188,8 +188,6 @@ public class MorpionIA extends BrainIA
                 placement(cote, ia);
                 return;
             }
-
-
         }
 
         else
@@ -198,6 +196,36 @@ public class MorpionIA extends BrainIA
             placement(coupIA, ia);
         }
 
+    }
+
+    // Etape 1 : on récupe tout les coup possible dans une ArrayList (car la méthode recupCoupPossible nous renvoi une ArrayList donc on est obligé de stocker son retour dans une ArrayList)
+    // Etape 2 : on regarde la taille de cette ArrayList avec size
+    // Etape 3 : à partir de cette taille on fait un random
+    // Etape 4 : le chiffre retourné par le randome coorespondra au coordonné de l'ArrayList où est stocké notre coup
+    // Etape 5 : on fait jouer le coup
+    // easy !!!
+    public void entrerCoupIaRandom(Jeu  jeu, Joueur ia)
+    {
+        ArrayList<int[]> coupPossible = recupCoordCaseVide();
+        int nb_coup_poss = coupPossible.size();
+
+        int CoordCoup = random.nextInt(nb_coup_poss);
+        int[] coup =  coupPossible.get(CoordCoup);
+        placement(coup, ia);
+    }
+
+
+
+    public void entrerCoupIA(Jeu jeu, Joueur ia, Joueur j)
+    {
+        if (difficulte.getNiv_diff()==1)
+        {
+            entrerCoupIaRandom(jeu, ia);
+        }
+        else
+        {
+            entrerCoupIAIntelegente(jeu, ia, j);
+        }
     }
 
     public ArrayList<int[]> recupCoordCaseVide()

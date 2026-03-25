@@ -10,13 +10,15 @@ package projet_java.modele;
 
 
 public class Difficulte {
-    private int difficulte;
+    private int niv_diff;
     public Difficulte()
     {
-        this.difficulte = 0;
+        this.niv_diff = 0;
     }
 
     public void setDifficulte(int difficulte) {
-        this.difficulte = difficulte;
+        this.niv_diff = difficulte;
     }
+
+    public int getNiv_diff() { return niv_diff; }
 }
