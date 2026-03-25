@@ -157,7 +157,7 @@ public class BrainIA {
         int[] coup = new int[2];
         if(g.plateau[1][1] == 0)
         {
-            coup[0] = 1 ;
+            coup[0] = 1;
             coup[1] = 1;
             return coup;
         }
@@ -458,3 +458,4 @@ public class BrainIA {
 
 //========================
 }
+/////lol
