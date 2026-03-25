@@ -241,16 +241,18 @@ public class BrainIA {
                 placement(centre, ia);
                 return;
             }
-            else if  (cote != null)
-            {
-                placement(cote, ia);
-                return;
-            }
             else if( coin != null)
             {
                 placement(coin, ia);
                 return;
             }
+
+            else if  (cote != null)
+            {
+                placement(cote, ia);
+                return;
+            }
+
 
         }
 
