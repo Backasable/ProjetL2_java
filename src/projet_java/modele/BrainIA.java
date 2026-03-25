@@ -380,7 +380,7 @@ public class BrainIA {
         // On vérif d'abord si le Joueur lors de son prochain coup pourrait gagné et si c'est le cas, l'ia joue la case qu'il était sensé jouer
         /*int[] caseGagnantJ = verifwinP(jeu, j);
 
-        if (caseGagnantJ != nuuall) {
+        if (caseGagnantJ != null) {
             placement(caseGagnantJ, ia);
             return; // <- on met fin à la fct
         }
