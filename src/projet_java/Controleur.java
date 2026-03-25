@@ -148,6 +148,13 @@ public class Controleur {
         boolean vainqueur = false;
         do {
 
+            // On check si la grille est plein avant que le joueur joue
+            if (jeu.g.checkGrillefull())
+            {
+                vainqueur = true; // <- optionnel mais pour que ce soit joli je le met
+                return "ex aequo";
+            }
+
             // j1 joue son coup
             entrerCoup(jeu, ihm, j1);
 
@@ -158,6 +165,7 @@ public class Controleur {
                 return j1.nom;
             }
 
+            // On check la grille avant que l'ia ou le 2ème joueur joue
             if (jeu.g.checkGrillefull())
             {
                 vainqueur = true; // <- optionnel mais pour que ce soit joli je le met
