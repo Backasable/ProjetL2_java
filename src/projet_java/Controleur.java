@@ -7,6 +7,7 @@ import projet_java.vue.IHM;
 public class Controleur {
     private IHM ihm;
     private Enregistre save;
+    private Difficulte niveauDiff;
 
 
 
@@ -14,6 +15,7 @@ public class Controleur {
     {
         this.ihm = new IHM();
         this.save = new Enregistre();
+        this.niveauDiff = new Difficulte();
 
     }
 
@@ -29,13 +31,25 @@ public class Controleur {
         int choicePlayerG = ihm.UserInputChoiceGame();
         Jeu jeu = creationJeu(choicePlayerG);
 
-        BrainIA iaBrain = new BrainIA(jeu.g);
+
+        BrainIA iaBrain = null;
+        if (choicePlayerG == 1)
+        {
+            iaBrain = new Puissance4_IA(jeu.g, niveauDiff);
+        }
+        else
+        {
+            iaBrain = new MorpionIA(jeu.g, niveauDiff);
+        }
+
+
 
         int cptNbPartie = 0;
 
 
         while (newGame(ihm)) {
 
+            niveauDiff.setDifficulte(ihm.difficultyChoice());  // <- On change le niveau de difficulé
             cptNbPartie++;
             String res = loopGame(jeu, j1, j2, iaBrain);
             save.ajouterRes(res);

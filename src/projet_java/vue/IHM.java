@@ -94,6 +94,43 @@ public class IHM {
         return colonne;
     }
 
+    public int difficultyChoice() {
+        boolean valide = false;
+
+        while(!(valide))
+        {
+            System.out.println();
+            System.out.print("        1: Facile !\n        2: Difficile !\n\nChoisissez une difficulté : ");
+            String user = sc.nextLine();
+            try
+            {
+                // On vérif si ce qu'a saisi user est bien un chiffre
+                if (user.length() != 1 || !(Character.isDigit((user.charAt(0)))) )
+                {
+                    throw new ChoiceGameException("Veuillez saisir une choix valide ");
+                }
+
+                int choix  = Integer.parseInt(user);
+
+                // On vérif si ce chiffre n'est pas différent de 1 et 2
+                if (choix != 1 && choix != 2) {
+                    throw new ChoiceGameException("Veuillez saisir une choix valide ");
+
+                }
+                // Si le prog arrive ici ça veut dire que user a rentré un choix valide
+                else
+                {
+                    return choix;
+                }
+            }
+            catch(ChoiceGameException e)
+            {
+                System.out.println(e.getMessage());
+            }
+        }
+        return 0;  // <- Ce return 0 est obligatoire car Java exige qu'une méthode retourne un int sur tous les chemins possibles. Même si la boucle gère tout en interne, Java ne peut pas garantir qu'on n'en sortira jamais — il veut donc un return de secours au cas où
+    }
+
 
 
     // Méthode qui récupère les coordonnées(ligne et colonne)
