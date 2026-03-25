@@ -287,7 +287,7 @@ public class BrainIA {
         for (int[] coup : coupPossible)
         {
             placement(coup, ia);
-            int score = minmax(coup, ia, j, jeu, false);
+            int score = minmax(ia, j, jeu, false);
 
 
             if ( score > bestscore)
@@ -303,7 +303,7 @@ public class BrainIA {
         return meilleurCoup;
     }
 
-    private int  minmax(int[] coup, Joueur ia, Joueur j, Jeu jeu, boolean maximiseur)
+    private int  minmax(Joueur ia, Joueur j, Jeu jeu, boolean maximiseur)
     {
         ArrayList<int[]> coupPossible = recupCoordCaseVide(); // <- on recherche les coup possible une nouvelle fois
 
@@ -316,7 +316,7 @@ public class BrainIA {
 
                 for (int[] coups : coupPossible) {
                     placement(coups, ia);
-                    int score = minmax(coups, ia, j, jeu, false);
+                    int score = minmax(ia, j, jeu, false);
                     annulerCoup(coups);
 
                     if (score > bestScore)
@@ -337,7 +337,7 @@ public class BrainIA {
                 for (int[] coups : coupPossible)
                 {
                     placement(coups, j);
-                    int score = minmax(coups, ia, j, jeu, true);
+                    int score = minmax(ia, j, jeu, true);
                     annulerCoup(coups);
 
                     // Lorsqu'on remonte, on compare bien les score
