@@ -49,7 +49,14 @@ public class Controleur {
 
         while (newGame(ihm)) {
 
-            niveauDiff.setDifficulte(ihm.difficultyChoice());  // <- On change le niveau de difficulé
+            // Comme je ne sais comment faire
+            // Je vérifie à chaque partie si le j2 est bien une IA est si c'est le cas on
+            // demande le niveau de difficulte que l'ia doit avoir à chaque new game
+            if (j2.getNom().equals("IA"))
+            {
+                niveauDiff.setDifficulte(ihm.difficultyChoice());  // <- On change le niveau de difficulé
+            }
+
             cptNbPartie++;
             String res = loopGame(jeu, j1, j2, iaBrain);
             save.ajouterRes(res);
