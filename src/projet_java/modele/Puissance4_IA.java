@@ -50,10 +50,98 @@ public class Puissance4_IA extends BrainIA
     }
 
 
-    public int derminerScoreCoup(int[] coup)
+    public int determinerScoreCoup(Jeu jeu, int[] coup, Joueur ia, Joueur j)
     {
+        int scoreTotal = 0;
+
+        // Phase défensive :
+        // Régle A :
+        if (verifwinP(jeu, coup, j))
+        {
+            scoreTotal = scoreTotal + 900;
+        }
+        // Regle B :
+        else if (testerLigne(jeu, coup, j))
+        {
+            scoreTotal = scoreTotal + 500;
+        }
+
+        // Phase offensive :
+
+        // Règle A :
+        else if (verifwinP(jeu, coup, ia))
+        {
+            scoreTotal = scoreTotal + 1000;
+        }
+
+        // Règle B :
+
+
+        // Règle C :
+
+        // Règle D :
+        else
+        {
+            scoreTotal = scoreTotal + regleD(coup);
+        }
+
+        return scoreTotal;
+
 
     }
+
+    // Util pour la règle offensive d :
+    private int regleD(int[] coup)
+    {
+        int colonne = coup[1];
+
+        switch (colonne)
+        {
+            case 1:
+                return 1;
+            case 2:
+                return 2;
+            case 3:
+                return 3;
+            case 4:
+                return 5;
+            case 5:
+                return 3;
+            case 6:
+                return 2;
+            case 7:
+                return 1;
+        }
+
+        return 0; // <- obligatoire pour eviter erreur missing return statement
+    }
+
+    // util pour la règle défensive b,
+    // Commence la recherche d'une case gagnante pour l'advaisaire (qui n'est pas encore accessible mais qui permettrait à l'adversaire de gagné si elle était atteint)
+    // à partir de la case au dessus du coup joué
+    // Et teste toutes les case de la colonne jusqu'à remonter à la première case de la colonne
+    // Si on en a trouve 1 alors on arrête la recherche et on retourne true
+    // Si on a atteint la limite la première case de la colonne ça veut dire qu'on a atteint la limite de la grille donc on retourne false
+    private boolean testerLigne(Jeu jeu, int[] coup, Joueur j)
+    {
+        int ligne = coup[0];
+        int col = coup[1];
+
+        int[] colonneVerif = new int[2];
+
+        for  (int i = ligne; i > 0; i--)
+        {
+            colonneVerif[0] = i;
+            colonneVerif[1] = col;
+            if (verifwinP(jeu, colonneVerif, j))
+            {
+                return true;
+            }
+
+        }
+        return false;
+    }
+
 
     public int[] calculerMeilleurCoup(Map<int[], Integer> coupEtScore)
     {
@@ -87,7 +175,7 @@ public class Puissance4_IA extends BrainIA
 
         for (int[] coup : coupPossible)
         {
-            int score = derminerScoreCoup(coup);
+            int score = determinerScoreCoup(jeu, coup, ia, j);
 
             // Note : il n'y a pas besoin de vérifier si le coup est déjà
             // dans le Map coupEtScore vu que ce coup sera enregister qu'une seul fois
@@ -147,10 +235,10 @@ public class Puissance4_IA extends BrainIA
 
     // C'est à dire qu'elle simule le fait qu'un joueur va jouer et teste si la colonnne est joué permet de gagné ou non
     // Si il y a un moment où le pion du joueur tombe dans une case qui lui permet d'obtenir la victoire, alors on retourne le coup gagnant
-    public boolean  verifwinP(Jeu jeu, int col, Joueur j)
+    public boolean  verifwinP(Jeu jeu, int[] caseVide, Joueur j)
     {
         // On récupère la case où va tomber le pion
-        int[] caseVide = g.findCaseVide(col);
+
         int ligne = caseVide[0];
         int colonne = caseVide[1];
 
