@@ -54,6 +54,13 @@ public class Puissance4_IA extends BrainIA
     {
         int scoreTotal = 0;
 
+        // Note : Pk je ne met pas de if puis, encore un else if puis, else if ... puis enfin un else
+        // car en java une fois qu'il a trouver une if ou else if vrai,
+        // il exécute le bock du if ou else if vrai
+        // puis va directement à la fin de la méthode.
+        // Sauf que nous, on veut justement qu'il regarde tout les if, else if et else
+        // donc pour cela, on met simplement des if, Ainsi java les parcouriras tous
+
         // Phase défensive :
         // Régle A :
         if (verifwinP(jeu, coup, j))
@@ -61,7 +68,7 @@ public class Puissance4_IA extends BrainIA
             scoreTotal = scoreTotal + 900;
         }
         // Regle B :
-        else if (testerLigne(jeu, coup, j))
+        if (testerLigne(jeu, coup, j))
         {
             scoreTotal = scoreTotal + 500;
         }
@@ -69,7 +76,7 @@ public class Puissance4_IA extends BrainIA
         // Phase offensive :
 
         // Règle A :
-        else if (verifwinP(jeu, coup, ia))
+        if (verifwinP(jeu, coup, ia))
         {
             scoreTotal = scoreTotal + 1000;
         }
@@ -79,11 +86,10 @@ public class Puissance4_IA extends BrainIA
 
         // Règle C :
 
+
         // Règle D :
-        else
-        {
-            scoreTotal = scoreTotal + regleD(coup);
-        }
+        scoreTotal = scoreTotal + regleD(coup);
+
 
         return scoreTotal;
 
@@ -145,6 +151,7 @@ public class Puissance4_IA extends BrainIA
 
     public int[] calculerMeilleurCoup(Map<int[], Integer> coupEtScore)
     {
+        // Rappel si on a plusieurs coups qui ont le même meilleur score l'ia doit choisir aléatoirement entre ces coups
         int[] meilleurCoup = null;
         int ScoreMeilleur = 0;
 
@@ -159,7 +166,40 @@ public class Puissance4_IA extends BrainIA
             }
         }
 
-        return meilleurCoup;
+        // On fait donc cela à la fin, après avoir determiner le coup ayant le plus haut score
+
+        // Donc on ajoute le meilleurCoup dans l'arrayListe
+        // Puis on re regarde parmis le map si il n'ya pas un autre coup qui a luis aussi
+        // le même score que le plus haut score et si le coup n'est pas déjà dedant,
+        // alors on l'ajoute à l'arrayList plsCoup
+        // Ensuite si,
+        // la taille de l'arraylist = 1 alors ça veut dire qu'on a 1 seul element donc on le retourne
+        // Sinon,
+        // on choisi aléatoirement entre les elements de l'arrayList
+
+        ArrayList<int[]> plsCoup = new ArrayList<>();
+
+        plsCoup.add(meilleurCoup);
+
+        for (int[] cle : coupEtScore.keySet())
+        {
+            int score = coupEtScore.get(cle);
+
+            if (score== ScoreMeilleur && !(plsCoup.contains(cle)))
+            {
+                plsCoup.add(cle);
+            }
+        }
+
+        if (plsCoup.size()== 1)
+        {
+            return plsCoup.get(0);
+        }
+        else
+        {
+            int indice = random.nextInt(plsCoup.size());
+            return plsCoup.get(indice);
+        }
     }
 
     // Demande à determineScoreCol() de calculer le score de chaque coup
@@ -189,10 +229,6 @@ public class Puissance4_IA extends BrainIA
 
         placement(meilleurCoup, ia);
     }
-
-
-
-
 
 
 
@@ -280,4 +316,237 @@ public class Puissance4_IA extends BrainIA
     }
 
 
+
+    public boolean compterAlignement(Joueur j, int[] coup, int nbJeton)
+    {
+
+        int[] coordCasePion = j.getcaseTrouverCoord();
+        int ligne = coordCasePion[0];
+        int colonne = coordCasePion[1];
+        int id = j.idJoueur;
+
+
+        if(verifLigne(ligne, colonne, id))
+        {
+            return true;
+        }
+        else if(verifColonne(ligne, colonne, id))
+        {
+            return true;
+        }
+        else if(verifDiagoDecroissante(ligne, colonne, id))
+        {
+            return true;
+        }
+        else if(verifDiagoCroissante(ligne, colonne, id))
+        {
+            return true;
+        }
+        // Si rien n'est vrai alors on retourne false :
+        return false;
+
+
+    }
+
+
+
+
+    // On vérifie si on a un alignement : * * * *  de 4 pions de même couleur sur les colonnes
+    public boolean verifColonne(int Ligne, int Colonne, int identifiant)
+    {
+        int cpt = 1;  // <- 1 et non 0 car je ne prend pas en compte la case où
+        //  lorsqu'il part dans l'autre sens dans le prog projet_java.vue que je ne fait que regarder si
+        // la prochaine case est de la même couleur,
+        // donc je dois initialiser le compteur à 1 pour prendre cette case en considération cf shema
+
+        int ligne = Ligne;
+        int colonne = Colonne;
+        int id = identifiant;
+        boolean gagne = false;
+
+        // On vérifie d'abord si lorsqu'on fait un déplacement vers la gauche sur la ligne, on est pas hors limite
+        // Et
+        // ensuite on verif si le pion de la case à gauche est de la même couleur
+        while(0<=colonne-1 && colonne-1 <g.getNbcol()    && g.plateau[ligne][colonne-1]==id )
+        {
+            // System.out.println("Colonne actuel : "+colonne);
+            colonne--;
+            // System.out.println("On va à gauche");
+            // System.out.println("On se déplace sur la colonne : "+colonne);
+
+        }
+
+        // On fait l'op inverse donc on se déplace mtn vers la droite et non plus vers la gauche
+        // Mais mtn on a un compteur :
+        // Note : la condition du if est tout le temps vrai donc elle est un peu conne mais j'avais besoin d'un true
+        if (g.plateau[ligne][colonne]==id)
+        {
+            // Pareil ici on vérif d'abord si lorsqu'on fait nos déplacement sur la ligne, on est pas hors limite
+            // Ensuite on vérif si la case de droite a un pion de la même couleur
+            while (0<=colonne+1 && colonne+1 <g.getNbcol()    &&     g.plateau[ligne][colonne+1]==id)
+            {
+                colonne++;
+                cpt++;
+                // System.out.println("Dans l'autre sens");
+                // System.out.println("Compteur : "+cpt);
+                // System.out.println("On se déplace à droite sur la colonne : "+ colonne);
+                if (cpt == 4)
+                {
+                    gagne = true;
+                    break;
+
+                }
+            }
+        }
+        return gagne;
+    }
+
+
+
+
+    //                                                                       *
+    //                                                                       *
+    //                                                                       *
+    // On vérif tout les ligne si y'a un alignement de 4 pions de comme ça : *
+    public boolean verifLigne(int Ligne, int Colonne, int identifiant)
+    {
+        int cpt = 1; // cf verifLigne pour expli° du 1
+        int ligne = Ligne;
+        int colonne = Colonne;
+        int id = identifiant;
+        boolean gagne = false;
+
+        // On vérifie d'abord si lorsqu'on fait ligne-1, on est pas hors limite
+        //   ET
+        // ensuite on verif si le pion de la case au dessus est de la même couleur
+        while(0<=ligne-1 && ligne-1 <g.getNbLigne()    && g.plateau[ligne-1][colonne]==id )
+        {
+            // System.out.println("ligne actuel : "+ligne);
+            ligne--;
+            // System.out.println("On va en haut");
+            // System.out.println("On se déplace sur la ligne du haut : "+ligne);
+
+        }
+        // On retourne donc mtn vers le bas et non plus vers le haut
+        if (g.plateau[ligne][colonne]==id )
+        {
+            // Pareil ici on vérif d'abord si lorsqu'on fait ligne+1, on est pas hors limite
+            //  ET
+            // Ensuite on vérif si la case en dessous a un pion de la même couleur
+            while (0<=ligne+1 && ligne+1 <g.getNbLigne()    &&     g.plateau[ligne+1][colonne]==id)
+            {
+                ligne++;
+                cpt++;
+                // System.out.println("Dans l'autre sens");
+                // System.out.println("Compteur : "+cpt);
+                // System.out.println("On se déplace sur la ligne du bas : "+ ligne);
+                if (cpt == 4)
+                {
+                    gagne = true;
+                    break;
+
+                }
+            }
+        }
+        return gagne;
+    }
+
+
+    public boolean verifDiagoDecroissante(int Ligne, int Colonne, int identifiant)
+    {
+        int cpt = 1; // cf verifLigne pour expli° du 1
+        int ligne = Ligne;
+        int colonne = Colonne;
+        int id = identifiant;
+        boolean gagne = false;
+
+        // On vérifie d'abord si lorsqu'on fait ligne-1 et colonne-1 on est pas hors limite
+        //   ET
+        // ensuite on verif si le pion de la case au dessus à gauche est de la même couleur
+        while(0<=ligne-1 && ligne-1 <g.getNbLigne() && 0<=colonne-1 && colonne-1 <g.getNbcol()    && g.plateau[ligne-1][colonne-1]==id )
+        {
+            // System.out.println("ligne actuel : "+ligne);
+            ligne--;
+            colonne--;
+            // System.out.println("On va en haut");
+            // System.out.println("On se déplace sur la ligne du haut : "+ligne);
+
+        }
+        // Condition tjr vraie à tester sans ?
+        if (g.plateau[ligne][colonne]==id )
+        {
+            // Pareil ici on vérif d'abord si lorsqu'on fait ligne+1 et colonne + 1 on est pas hors limite
+            //  ET
+            // Ensuite on vérif si la case en dessous a un pion de la même couleur
+            while (0<=ligne+1 && ligne+1 <g.getNbLigne() && 0<=colonne+1 && colonne+1 <g.getNbcol()     &&     g.plateau[ligne+1][colonne+1]==id)
+            {
+                ligne++;
+                colonne++;
+                cpt++;
+                // System.out.println("Dans l'autre sens");
+                // System.out.println("Compteur : "+cpt);
+                // System.out.println("On se déplace sur la ligne du bas : "+ ligne);
+                // System.out.println("On se déplace sur la ligne du bas : "+ colonne);
+                if (cpt == 4)
+                {
+                    gagne = true;
+                    break;
+
+                }
+            }
+        }
+        return gagne;
+
+    }
+
+
+    public boolean verifDiagoCroissante(int Ligne, int Colonne, int identifiant)
+    {
+        int cpt = 1; // cf verifLigne pour expli° du 1
+        int ligne = Ligne;
+        int colonne = Colonne;
+        int id = identifiant;
+        boolean gagne = false;
+
+        // On vérifie d'abord si lorsqu'on fait ligne+1 et colonne+1 on est pas hors limite
+        //   ET
+        // ensuite on verif si le pion de la case au dessus à droite est de la même couleur
+        while(0<=ligne-1 && ligne-1 <g.getNbLigne() && 0<=colonne+1 && colonne+1 <g.getNbcol()    && g.plateau[ligne-1][colonne+1]==id )
+        {
+            // System.out.println("ligne , colonne actuel : "+ligne+ colonne);
+            ligne--;
+            colonne++;
+            // System.out.println("On va en haut à droite");
+            // System.out.println("On se déplace sur la colonne en haut à doite : "+ligne);
+
+        }
+        // Condition tjr vraie à tester sans ?
+        if (g.plateau[ligne][colonne]==id )
+        {
+            // Pareil ici on vérif d'abord si lorsqu'on fait ligne+1 et colonne - 1 on est pas hors limite
+            //  ET
+            // Ensuite on vérif si la case en dessous à gauche a un pion de la même couleur
+            while (0<=ligne+1 && ligne+1 <g.getNbLigne() && 0<=colonne-1 && colonne-1 <g.getNbcol()     &&     g.plateau[ligne+1][colonne-1]==id)
+            {
+                ligne++;
+                colonne--;
+                cpt++;
+                // System.out.println("Dans l'autre sens");
+                // System.out.println("Compteur : "+cpt);
+                // System.out.println("On se déplace sur la ligne colonne du bas à gauche : "+ ligne+ "," + colonne);
+                if (cpt == 4)
+                {
+                    gagne = true;
+                    break;
+
+                }
+            }
+        }
+        return gagne;
+
+    }
+
+
+
+//=======================================
 }
