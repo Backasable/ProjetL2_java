@@ -22,7 +22,7 @@ public class Puissance4_IA extends BrainIA
             caseVide = g.findCaseVide(col);
         }
         // tant qu'on a pas de case valide i.e s'il y a déjà un pion dessus on boucle
-        while (!(verifColpleine(caseVide)));
+        while (verifColpleine(caseVide));
 
         placement(caseVide, ia);
     }
@@ -103,19 +103,19 @@ public class Puissance4_IA extends BrainIA
 
         switch (colonne)
         {
-            case 1:
+            case 0:
                 return 1;
+            case 1:
+                return 2;
             case 2:
-                return 2;
+                return 3;
             case 3:
-                return 3;
-            case 4:
                 return 5;
-            case 5:
+            case 4:
                 return 3;
-            case 6:
+            case 5:
                 return 2;
-            case 7:
+            case 6:
                 return 1;
         }
 
@@ -260,11 +260,11 @@ public class Puissance4_IA extends BrainIA
     {
         if (g.plateau[coord[0]][coord[1]] != 0)
         {
-            return false;
+            return true;
         }
         else
         {
-            return true;
+            return false;
         }
     }
 
@@ -293,7 +293,8 @@ public class Puissance4_IA extends BrainIA
         }
         else
         {
-            // Sinon on retourne false
+            // Sinon, on annule aussi le coup et on retourne false
+            g.plateau[ligne][colonne] = 0;
             return false;
         }
     }
