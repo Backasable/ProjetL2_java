@@ -67,11 +67,12 @@ public class Puissance4_IA extends BrainIA
         {
             scoreTotal = scoreTotal + 900;
         }
-        // Regle B :
-        if (testerLigne(jeu, coup, j))
-        {
-            scoreTotal = scoreTotal + 500;
-        }
+
+        // Règle B devenu Obsselette et inutile  :
+//        if (testerLigne(jeu, coup, j))
+//        {
+//            scoreTotal = scoreTotal + 500;
+//        }
 
         // Phase offensive :
 
@@ -82,18 +83,18 @@ public class Puissance4_IA extends BrainIA
         }
 
         // Règle B :
-
+        int scoreB = compterNbCaseVideAlignement(ia, coup, 3);
+        scoreTotal = scoreTotal + scoreB;
 
         // Règle C :
-
+        int scoreC = compterNbCaseVideAlignement(ia, coup, 2);
+        scoreTotal  = scoreTotal + scoreC;
 
         // Règle D :
         scoreTotal = scoreTotal + regleD(coup);
 
 
         return scoreTotal;
-
-
     }
 
     // Util pour la règle offensive d :
@@ -159,6 +160,8 @@ public class Puissance4_IA extends BrainIA
         {
             int score = coupEtScore.get(cle);
 
+            System.out.println("coup : [" + (cle[0]+1) + "," + (cle[1]+1) + "] score: " + score);  // <- je l'ai mis ici
+
             if (score > ScoreMeilleur)
             {
                 ScoreMeilleur = score;
@@ -169,7 +172,7 @@ public class Puissance4_IA extends BrainIA
         // On fait donc cela à la fin, après avoir determiner le coup ayant le plus haut score
 
         // Donc on ajoute le meilleurCoup dans l'arrayListe
-        // Puis on re regarde parmis le map si il n'ya pas un autre coup qui a luis aussi
+        // Puis on re regarde parmis le map si il n'y a pas un autre coup qui a luis aussi
         // le même score que le plus haut score et si le coup n'est pas déjà dedant,
         // alors on l'ajoute à l'arrayList plsCoup
         // Ensuite si,
@@ -183,8 +186,12 @@ public class Puissance4_IA extends BrainIA
 
         for (int[] cle : coupEtScore.keySet())
         {
+
             int score = coupEtScore.get(cle);
 
+
+
+            // rappel .contains() retourne un booleans il regarde si y'a l'element dans le ArrayList plsCoup
             if (score== ScoreMeilleur && !(plsCoup.contains(cle)))
             {
                 plsCoup.add(cle);
@@ -317,235 +324,672 @@ public class Puissance4_IA extends BrainIA
     }
 
 
+//===================================================
+    // Util pour les règle offensive B et C
 
-    public boolean compterAlignement(Joueur j, int[] coup, int nbJeton)
+    public int compterNbCaseVideAlignement(Joueur j, int[] coup, int nbJeton)
     {
 
-        int[] coordCasePion = j.getcaseTrouverCoord();
-        int ligne = coordCasePion[0];
-        int colonne = coordCasePion[1];
+        // On initilise un score pour calculer le score total en appliquant la règle offensive B ou C
+        int score = 0;
+
+        // On place le coup
+        placement(coup, j);
+        j.setcaseTrouverCoord(coup);
+
+        int ligne = coup[0];
+        int colonne = coup[1];
         int id = j.idJoueur;
 
+        int nbCaseVideL =verifColonne(ligne, colonne, id, nbJeton);
+        int nbCaseVideC = verifLigne(ligne, colonne, id, nbJeton);
+        // diago croissante
+        int nbCaseVideDC = verifDiagoCroissante(ligne, colonne, id, nbJeton);
+        // diago decroissante
+        int nbCaseVideDD = verifDiagoDecroissante(ligne, colonne, id, nbJeton);
 
-        if(verifLigne(ligne, colonne, id))
+        if(nbCaseVideL!=0)
         {
-            return true;
+            if (nbJeton==3)
+            {
+                if(nbCaseVideL == 2)
+                {
+                    score = score + 200;
+                }
+                else if(nbCaseVideL == 1)
+                {
+                    score = score + 100;
+                }
+            }
+
+            else if (nbJeton==2)
+            {
+
+                if(nbCaseVideL== 4)
+                {
+                    score = score + 30; // Car si on a 4 vase vide détecter on peut former 3 paire au total et une paire vaut 10 point
+                }
+                else if(nbCaseVideL== 3)
+                {
+                    score = score + 20; // Car on peut faire 2 paire
+                }
+                else if(nbCaseVideL== 2)
+                {
+                    score = score + 10;
+                }
+            }
+
         }
-        else if(verifColonne(ligne, colonne, id))
+
+        if(nbCaseVideC!=0)
         {
-            return true;
+            if (nbJeton==3)
+            {
+                if(nbCaseVideC == 2)
+                {
+                    score = score + 200;
+                }
+                else if(nbCaseVideC == 1)
+                {
+                    score = score + 100;
+                }
+            }
+
+            else if (nbJeton==2)
+            {
+
+                if(nbCaseVideC== 4)
+                {
+                    score = score + 30; // Car si on a 4 vase vide détecter on peut former 3 paire au total et une paire vaut 10 point
+                }
+                else if(nbCaseVideC== 3)
+                {
+                    score = score + 20; // Car on peut faire 2 paire
+                }
+                else if(nbCaseVideC== 2)
+                {
+                    score = score + 10;
+                }
+            }
+
         }
-        else if(verifDiagoDecroissante(ligne, colonne, id))
+        if(nbCaseVideDC!=0)
         {
-            return true;
+            if (nbJeton==3)
+            {
+                if(nbCaseVideDC == 2)
+                {
+                    score = score + 200;
+                }
+                else if(nbCaseVideDC == 1)
+                {
+                    score = score + 100;
+                }
+            }
+
+            else if (nbJeton==2)
+            {
+
+                if(nbCaseVideDC== 4)
+                {
+                    score = score + 30; // Car si on a 4 vase vide détecter on peut former 3 paire au total et une paire vaut 10 point
+                }
+                else if(nbCaseVideDC== 3)
+                {
+                    score = score + 20; // Car on peut faire 2 pair
+                }
+                else if(nbCaseVideDC== 2)
+                {
+                    score = score + 10; // Car on peut faire 1 seul pair
+                }
+            }
+
         }
-        else if(verifDiagoCroissante(ligne, colonne, id))
+        if(nbCaseVideDD!=0)
         {
-            return true;
+            if (nbJeton==3)
+            {
+                if(nbCaseVideDD == 2)
+                {
+                    score = score + 200;
+                }
+                else if(nbCaseVideDD == 1)
+                {
+                    score = score + 100;
+                }
+            }
+
+            else if (nbJeton==2)
+            {
+
+                if(nbCaseVideDD== 4)
+                {
+                    score = score + 30; // Car si on a 4 vase vide détecter on peut former 3 paire au total et une paire vaut 10 point
+                }
+                else if(nbCaseVideDD== 3)
+                {
+                    score = score + 20; // Car on peut faire 2 paire
+                }
+                else if(nbCaseVideDD== 2)
+                {
+                    score = score + 10;
+                }
+            }
         }
         // Si rien n'est vrai alors on retourne false :
-        return false;
-
-
+        annulerCoup(coup, j);
+        return score;
     }
 
 
 
 
-    // On vérifie si on a un alignement : * * * *  de 4 pions de même couleur sur les colonnes
-    public boolean verifColonne(int Ligne, int Colonne, int identifiant)
+    // ****
+    public int verifColonne(int ligne, int colonne, int id, int nbJeton)
     {
-        int cpt = 1;  // <- 1 et non 0 car je ne prend pas en compte la case où
-        //  lorsqu'il part dans l'autre sens dans le prog projet_java.vue que je ne fait que regarder si
+        int cpt = 1;  // <- 1 et non 0 car je ne prend pas en compte la case où on est
+        //  lorsqu'il part dans l'autre sens dans le prog projet_java.vue je ne fait que regarder si
         // la prochaine case est de la même couleur,
         // donc je dois initialiser le compteur à 1 pour prendre cette case en considération cf shema
 
-        int ligne = Ligne;
-        int colonne = Colonne;
-        int id = identifiant;
-        boolean gagne = false;
+        int nbCaseVide = 0; // <- pour la règle offensive b et c de l'it3
 
         // On vérifie d'abord si lorsqu'on fait un déplacement vers la gauche sur la ligne, on est pas hors limite
         // Et
         // ensuite on verif si le pion de la case à gauche est de la même couleur
-        while(0<=colonne-1 && colonne-1 <g.getNbcol()    && g.plateau[ligne][colonne-1]==id )
+        while (0 <= colonne - 1 && colonne - 1 < g.getNbcol() && g.plateau[ligne][colonne - 1] == id)
         {
-            // System.out.println("Colonne actuel : "+colonne);
             colonne--;
-            // System.out.println("On va à gauche");
-            // System.out.println("On se déplace sur la colonne : "+colonne);
-
         }
 
-        // On fait l'op inverse donc on se déplace mtn vers la droite et non plus vers la gauche
-        // Mais mtn on a un compteur :
-        // Note : la condition du if est tout le temps vrai donc elle est un peu conne mais j'avais besoin d'un true
-        if (g.plateau[ligne][colonne]==id)
+
+        // (Règle offensive B)
+        // Partie où on vérif la case vide à gauche de l'alignement
+        if (nbJeton == 3)
         {
-            // Pareil ici on vérif d'abord si lorsqu'on fait nos déplacement sur la ligne, on est pas hors limite
-            // Ensuite on vérif si la case de droite a un pion de la même couleur
-            while (0<=colonne+1 && colonne+1 <g.getNbcol()    &&     g.plateau[ligne][colonne+1]==id)
+            // On oublit pas de vérif si on est hors limite quand on va regarder la prochaine case vide
+            // vérif cette espace vide : (-)***
+            if (0<= colonne-1 && colonne - 1 < g.getNbcol() &&    g.plateau[ligne][colonne - 1] == 0)
             {
-                colonne++;
-                cpt++;
-                // System.out.println("Dans l'autre sens");
-                // System.out.println("Compteur : "+cpt);
-                // System.out.println("On se déplace à droite sur la colonne : "+ colonne);
-                if (cpt == 4)
+                nbCaseVide++;
+            }
+        }
+
+        // (Règle offensive C)
+        // Partie où on Vérif les paire à gauche de l'alignement      // même chose, verif si on est hors limite
+        else if (nbJeton == 2)
+        {
+
+            // regarde si y'a cette paire : (--)**
+
+            // On vérif d'abord si on est pas hors limite avant de faire ce qu'on a dit
+            if (0<= colonne-2 && colonne - 2 < g.getNbcol() &&    g.plateau[ligne][colonne - 1] == 0 && g.plateau[ligne][colonne - 2] == 0)
+            {
+                nbCaseVide += 2;
+            }
+
+
+            // 1er partie verif cette case de la paire : (-)**-
+
+            // On vérif d'abord si on est pas hors limite avant de faire ce qu'on a dit
+            else if (0<= colonne-2 && colonne -2 < g.getNbcol() &&    g.plateau[ligne][colonne - 1] == 0)
+            {
+                nbCaseVide++;
+            }
+        }
+
+        // Pareil ici on vérif d'abord si lorsqu'on fait nos déplacement sur la ligne, on est pas hors limite
+        // Ensuite on vérif si la case de droite a un pion de la même couleur
+        while (0 <= colonne + 1 && colonne + 1 < g.getNbcol() &&    g.plateau[ligne][colonne + 1] == id)
+        {
+            colonne++;
+            cpt++;
+        }
+
+        // (Règle offensive B SUITE)
+        // Partie où on regarde la case vide à droite de l'alignement
+        if (nbJeton == 3)
+        {
+            if (cpt == 3)
+            {
+                // On vérif d'abord son on est pas hors limite avant de faire ce qu'on a dit
+                if (0<= colonne+1 && colonne + 1 < g.getNbcol()   && g.plateau[ligne][colonne + 1] == 0) // vérif cette espace vide ***(-)
                 {
-                    gagne = true;
-                    break;
+                    nbCaseVide++;
 
                 }
             }
         }
-        return gagne;
+
+        // (Règle offensive C SUITE)
+        // Partie où on vérif les paires à droite de l'alignement
+        else if (nbJeton == 2)
+        {
+            if (cpt == 2)
+            {
+                // regarde la paire **(--)
+
+                // On vérif d'abord son on est pas hors limite avant de faire ce qu'on a dit
+                if (0<= colonne+2 && colonne + 2 < g.getNbcol()     && g.plateau[ligne][colonne + 1] == 0 && g.plateau[ligne][colonne + 2] == 0) {
+                    nbCaseVide += 2;
+
+
+                }
+                // 2 ème partie de cette paire : (-)**(-) où on regarde cette espace vide : -**(-)
+
+                // On vérif d'abord son on est pas hors limite avant de faire ce qu'on a dit
+                else if (  0<= colonne+1 && colonne +1 < g.getNbcol() && g.plateau[ligne][colonne + 1] == 0)
+                {
+                    nbCaseVide++;
+
+
+                }
+            }
+        }
+        if (cpt==nbJeton)
+        {
+            System.out.println("nb de case vide détecté : "+nbCaseVide + " nb de jeton : "+nbJeton);
+            return nbCaseVide;
+        }
+        return 0; // <- cf explication 33 feuille
     }
 
-
-
-
-    //                                                                       *
-    //                                                                       *
-    //                                                                       *
-    // On vérif tout les ligne si y'a un alignement de 4 pions de comme ça : *
-    public boolean verifLigne(int Ligne, int Colonne, int identifiant)
+    // *
+    // *
+    // *
+    // *
+    public int verifLigne(int ligne, int colonne, int id, int nbJeton)
     {
-        int cpt = 1; // cf verifLigne pour expli° du 1
-        int ligne = Ligne;
-        int colonne = Colonne;
-        int id = identifiant;
-        boolean gagne = false;
+        int cpt = 1; // cf verifCol pour expli° du 1
+
+        int nbCaseVide = 0;
 
         // On vérifie d'abord si lorsqu'on fait ligne-1, on est pas hors limite
         //   ET
         // ensuite on verif si le pion de la case au dessus est de la même couleur
         while(0<=ligne-1 && ligne-1 <g.getNbLigne()    && g.plateau[ligne-1][colonne]==id )
         {
-            // System.out.println("ligne actuel : "+ligne);
             ligne--;
-            // System.out.println("On va en haut");
-            // System.out.println("On se déplace sur la ligne du haut : "+ligne);
-
         }
-        // On retourne donc mtn vers le bas et non plus vers le haut
-        if (g.plateau[ligne][colonne]==id )
-        {
-            // Pareil ici on vérif d'abord si lorsqu'on fait ligne+1, on est pas hors limite
-            //  ET
-            // Ensuite on vérif si la case en dessous a un pion de la même couleur
-            while (0<=ligne+1 && ligne+1 <g.getNbLigne()    &&     g.plateau[ligne+1][colonne]==id)
-            {
-                ligne++;
-                cpt++;
-                // System.out.println("Dans l'autre sens");
-                // System.out.println("Compteur : "+cpt);
-                // System.out.println("On se déplace sur la ligne du bas : "+ ligne);
-                if (cpt == 4)
-                {
-                    gagne = true;
-                    break;
 
+        // (Règle offensive B)
+        // Partie où on vérif au dessus de l'alignement :
+        if (nbJeton==3)
+        {
+
+            // On vérif d'abord si on est pas hors limite avant de faire :
+            // Partie où Vérif si y'a case vide au dessus de l'alignement
+            // (-)
+            //  *
+            //  *
+            //  *
+
+            // On vérif d'abord son on est pas hors limite avant de faire ce qu'on a dit
+            if (0<=ligne-1 && ligne-1 <g.getNbLigne() &&    g.plateau[ligne - 1][colonne] == 0) {
+                nbCaseVide++;
+            }
+        }
+
+        // (Règle offensive C)
+        // Partie où on vérif les paire au dessus de l'alignement :
+        else if(nbJeton==2)
+        {
+
+            // Vérif la pair du dessus :
+            // (-)
+            // (-)
+            //  *
+            //  *
+
+            // On vérif d'abord son on est pas hors limite avant de faire ce qu'on a dit
+            if (0<= ligne-2 && ligne-2 < g.getNbLigne() &&      g.plateau[ligne - 1][colonne] == 0 && g.plateau[ligne - 2][colonne] == 0) {
+                nbCaseVide += 2;
+            }
+
+            // 1er partie on on vérif la case vide au dessus de l'alignement
+            // (-)
+            //  *
+            //  *
+            //  -
+
+            // On vérif d'abord son on est pas hors limite avant de faire ce qu'on a dit
+            else if (0<= ligne-1 && ligne-1 < g.getNbLigne() &&     g.plateau[ligne - 1][colonne] == 0) {
+                nbCaseVide++;
+            }
+        }
+
+        // Pareil ici on vérif d'abord si lorsqu'on fait ligne+1, on est pas hors limite
+        //  ET
+        // Ensuite on vérif si la case en dessous a un pion de la même couleur et on réitère jusqu'à c
+        while (0<=ligne+1 && ligne+1 <g.getNbLigne()    &&     g.plateau[ligne+1][colonne]==id)
+        {
+            ligne++;
+            cpt++;
+        }
+
+        // (Règle offensive B SUITE)
+        // Partie où on vérif en base de l'alignement :
+        if (nbJeton==3)
+        {
+            if (cpt == 3)
+            {
+                // Partie où on Verif si la case en bas de l'aligement est vide
+                //  *
+                //  *
+                //  *
+                // (-)
+
+                // On vérif d'abord son on est pas hors limite avant de faire ce qu'on a dit
+                if(0<= ligne+1 && ligne+1 < g.getNbLigne() &&    g.plateau[ligne+1][colonne] == 0)
+                {
+                    nbCaseVide++;
+                }
+
+            }
+        }
+
+        // (Règle offensive C SUITE)
+        // Partie où on vérif les paire en bas de l'alignement :
+        else if(nbJeton==2                                          && 0<= ligne+2 && ligne+2 < g.getNbLigne())
+        {
+            if (cpt == 2)
+            {
+                // Partie où on vérif la paire au dessus de l'alignement
+                //  *
+                //  *
+                // (-)
+                // (-)
+
+                // On vérif d'abord son on est pas hors limite avant de faire ce qu'on a dit
+                if (0<= ligne+2 && ligne+2 < g.getNbLigne() &&    g.plateau[ligne+1][colonne] == 0 && g.plateau[ligne+2][colonne] == 0)
+                {
+                    nbCaseVide+=2;
+                }
+
+
+                // 2ème partie où on vérif la case en base de l'alignement :
+                //  -
+                //  *
+                //  *
+                // (-)
+
+                // On vérif d'abord son on est pas hors limite avant de faire ce qu'on a dit
+                else if (0<= ligne+1 && ligne+1 < g.getNbLigne() &&     g.plateau[ligne+1][colonne] == 0)
+                {
+                    nbCaseVide++;
                 }
             }
         }
-        return gagne;
+
+        if(cpt == nbJeton)
+        {
+            return nbCaseVide;
+        }
+        return 0; // <- cf explication 33 de la feuille
     }
 
 
-    public boolean verifDiagoDecroissante(int Ligne, int Colonne, int identifiant)
+    public int verifDiagoDecroissante(int ligne, int colonne, int id, int nbJeton)
     {
         int cpt = 1; // cf verifLigne pour expli° du 1
-        int ligne = Ligne;
-        int colonne = Colonne;
-        int id = identifiant;
-        boolean gagne = false;
+
+        int nbcasevide = 0;
+
 
         // On vérifie d'abord si lorsqu'on fait ligne-1 et colonne-1 on est pas hors limite
         //   ET
         // ensuite on verif si le pion de la case au dessus à gauche est de la même couleur
-        while(0<=ligne-1 && ligne-1 <g.getNbLigne() && 0<=colonne-1 && colonne-1 <g.getNbcol()    && g.plateau[ligne-1][colonne-1]==id )
+        while (0 <= ligne - 1 && ligne - 1 < g.getNbLigne() && 0 <= colonne - 1 && colonne - 1 < g.getNbcol() && g.plateau[ligne - 1][colonne - 1] == id)
         {
-            // System.out.println("ligne actuel : "+ligne);
             ligne--;
             colonne--;
-            // System.out.println("On va en haut");
-            // System.out.println("On se déplace sur la ligne du haut : "+ligne);
-
         }
-        // Condition tjr vraie à tester sans ?
-        if (g.plateau[ligne][colonne]==id )
+
+        // Partie où on vérif les cases vides en Haut à gauche :
+
+        // (Règle offensive B)
+
+
+        // Partie où on vérif la case en haut à gauche de la diago décroissante
+        if (nbJeton == 3)
         {
-            // Pareil ici on vérif d'abord si lorsqu'on fait ligne+1 et colonne + 1 on est pas hors limite
-            //  ET
-            // Ensuite on vérif si la case en dessous a un pion de la même couleur
-            while (0<=ligne+1 && ligne+1 <g.getNbLigne() && 0<=colonne+1 && colonne+1 <g.getNbcol()     &&     g.plateau[ligne+1][colonne+1]==id)
+            // (-)
+            //    *
+            //      *
+            //        *
+
+            // On vérif d'abord si on on est pas hors limite avant de faire ce qu'on a dit
+            if (0 <= ligne - 1 && ligne - 1 < g.getNbLigne() && 0 <= colonne - 1 && colonne - 1 < g.getNbcol() &&        g.plateau[ligne - 1][colonne - 1] == 0) {
+                nbcasevide++;
+            }
+        }
+
+        // (Règle offensive C)
+        // Partie où on regarde les paires en haut à gauche
+        else if (nbJeton == 2)
+        {
+
+            // Partie où on regarde la paire en haut à gauche de la diago décroissante
+            // (-)
+            //   (-)
+            //      *
+            //        *
+
+            // On vérif d'abord son on est pas hors limite avant de faire ce qu'on a dit
+            if (0 <= ligne - 2 && ligne - 2 < g.getNbLigne() && 0 <= colonne - 2 && colonne - 2 < g.getNbcol() &&   g.plateau[ligne - 1][colonne - 1] == 0 && g.plateau[ligne - 2][colonne - 2] == 0) {
+                nbcasevide += 2;
+            }
+
+            // 1er partie où on regarde la case vide en haut à gauche pour cette paire :
+            // (-)
+            //    *
+            //      *
+            //        -
+
+            // On vérif d'abord son on est pas hors limite avant de faire ce qu'on a dit
+            else if (0 <= ligne - 1 && ligne - 1 < g.getNbLigne() && 0 <= colonne - 1 && colonne - 1 < g.getNbcol() &&    g.plateau[ligne - 1][colonne - 1] == 0) {
+                nbcasevide++;
+            }
+        }
+
+
+        // Pareil ici on vérif d'abord si lorsqu'on fait ligne+1 et colonne + 1 on est pas hors limite
+        //  ET
+        // Ensuite on vérif si la case en dessous a un pion de la même couleur
+        while (0 <= ligne + 1 && ligne + 1 < g.getNbLigne() && 0 <= colonne + 1 && colonne + 1 < g.getNbcol() && g.plateau[ligne + 1][colonne + 1] == id)
+        {
+            ligne++;
+            colonne++;
+            cpt++;
+        }
+
+        // Partie où on vérif les case vide en bas à droite :
+
+        // (Règle offensive B SUITE)
+        if (nbJeton == 3)
+        {
+            if (cpt == 3)
             {
-                ligne++;
-                colonne++;
-                cpt++;
-                // System.out.println("Dans l'autre sens");
-                // System.out.println("Compteur : "+cpt);
-                // System.out.println("On se déplace sur la ligne du bas : "+ ligne);
-                // System.out.println("On se déplace sur la ligne du bas : "+ colonne);
-                if (cpt == 4)
+                // Partie où vérif la case en bas de la diago décroissante
+                //  *
+                //    *
+                //      *
+                //       (-)
+
+                // On vérif d'abord son on est pas hors limite avant de faire ce qu'on a dit
+                if (0 <= ligne + 1 && ligne + 1 < g.getNbLigne() && 0 <= colonne + 1 && colonne + 1 < g.getNbcol() &&      g.plateau[ligne + 1][colonne + 1] == 0)
                 {
-                    gagne = true;
-                    break;
+                    nbcasevide++;
 
                 }
             }
         }
-        return gagne;
 
+        // (Règle offensive C SUITE)
+        // Partie où on regarde les paires en bas à droite de la diago décroissante :
+        else if (nbJeton == 2)
+        {
+            if (cpt == 2)
+            {
+
+                // Partie où on regarde la paire en bas à droite :
+                //  *
+                //    *
+                //     (-)
+                //       (-)
+
+                // On vérif d'abord son on est pas hors limite avant de faire ce qu'on a dit
+                if (0 <= ligne + 2 && ligne + 2 < g.getNbLigne() && 0 <= colonne + 2 && colonne + 2 < g.getNbcol() &&   g.plateau[ligne + 1][colonne + 1] == 0 && g.plateau[ligne + 2][colonne + 2] == 0)
+                {
+                    nbcasevide += 2;
+
+                }
+
+                // 2 eme partie où on vérif si la case en bas à droite de la diago décroissante est vide
+                //  -
+                //    *
+                //      *
+                //       (-)
+
+                // On vérif d'abord son on est pas hors limite avant de faire ce qu'on a dit
+                else if (0 <= ligne + 1 && ligne + 1 < g.getNbLigne() && 0 <= colonne + 1 && colonne + 1 < g.getNbcol() &&      g.plateau[ligne + 1][colonne + 1] == 0)
+                {
+                    nbcasevide++;
+                }
+            }
+        }
+        if (cpt == nbJeton)
+        {
+            return nbcasevide;
+        }
+        return 0; // <- cf explication 33 de la feuille
     }
 
 
-    public boolean verifDiagoCroissante(int Ligne, int Colonne, int identifiant)
-    {
+    public int verifDiagoCroissante(int ligne, int colonne, int id, int nbJeton) {
         int cpt = 1; // cf verifLigne pour expli° du 1
-        int ligne = Ligne;
-        int colonne = Colonne;
-        int id = identifiant;
-        boolean gagne = false;
+
+        int nbcasevide = 0;
 
         // On vérifie d'abord si lorsqu'on fait ligne+1 et colonne+1 on est pas hors limite
         //   ET
         // ensuite on verif si le pion de la case au dessus à droite est de la même couleur
-        while(0<=ligne-1 && ligne-1 <g.getNbLigne() && 0<=colonne+1 && colonne+1 <g.getNbcol()    && g.plateau[ligne-1][colonne+1]==id )
-        {
-            // System.out.println("ligne , colonne actuel : "+ligne+ colonne);
+        while (0 <= ligne - 1 && ligne - 1 < g.getNbLigne() && 0 <= colonne + 1 && colonne + 1 < g.getNbcol() && g.plateau[ligne - 1][colonne + 1] == id) {
             ligne--;
             colonne++;
-            // System.out.println("On va en haut à droite");
-            // System.out.println("On se déplace sur la colonne en haut à doite : "+ligne);
-
         }
-        // Condition tjr vraie à tester sans ?
-        if (g.plateau[ligne][colonne]==id )
+
+        // Partie où on regarde en haut à droite de la diago
+
+        // (Règle offensive B)
+        // Partie où on vérif la case vide en Haut à droite de la diago croissante
+        if (nbJeton == 3)
         {
-            // Pareil ici on vérif d'abord si lorsqu'on fait ligne+1 et colonne - 1 on est pas hors limite
-            //  ET
-            // Ensuite on vérif si la case en dessous à gauche a un pion de la même couleur
-            while (0<=ligne+1 && ligne+1 <g.getNbLigne() && 0<=colonne-1 && colonne-1 <g.getNbcol()     &&     g.plateau[ligne+1][colonne-1]==id)
+            //       (-)
+            //     *
+            //   *
+            // *
+
+            // On vérif d'abord son on est pas hors limite avant de faire ce qu'on a dit
+            if (0 <= ligne - 1 && ligne - 1 < g.getNbLigne() && 0 <= colonne + 1 && colonne + 1 < g.getNbcol() &&    g.plateau[ligne - 1][colonne + 1] == 0) {
+                nbcasevide++;
+            }
+        }
+
+        // (Règle offensive C)
+        // Partie où on regarde les paire en haut à droite de la diago croissante
+        else if (nbJeton == 2)
+        {
+            // On regarde si la paire en haut à droite sont des case vide
+            //       (-)
+            //     (-)
+            //   *
+            // *
+
+            // On vérif d'abord son on est pas hors limite avant de faire ce qu'on a dit
+            if (0 <= ligne - 2 && ligne - 2 < g.getNbLigne() && 0 <= colonne + 2 && colonne + 2 < g.getNbcol() &&     g.plateau[ligne - 1][colonne + 1] == 0 && g.plateau[ligne - 2][colonne + 2] == 0)
             {
-                ligne++;
-                colonne--;
-                cpt++;
-                // System.out.println("Dans l'autre sens");
-                // System.out.println("Compteur : "+cpt);
-                // System.out.println("On se déplace sur la ligne colonne du bas à gauche : "+ ligne+ "," + colonne);
-                if (cpt == 4)
-                {
-                    gagne = true;
-                    break;
+                nbcasevide += 2;
+            }
+
+            // 1er partie où on regarde si la case de la paire en haut à droite est vide
+            //       (-)
+            //     *
+            //   *
+            // -
+
+            // On vérif d'abord son on est pas hors limite avant de faire ce qu'on a dit
+            else if (0 <= ligne - 1 && ligne - 1 < g.getNbLigne() && 0 <= colonne + 1 && colonne + 1 < g.getNbcol() &&    g.plateau[ligne - 1][colonne + 1] == 0)
+            {
+                nbcasevide++;
+            }
+        }
+
+        // Pareil ici on vérif d'abord si lorsqu'on fait ligne+1 et colonne - 1 on est pas hors limite
+        //  ET
+        // Ensuite on vérif si la case en dessous à gauche a un pion de la même couleur
+        while (0 <= ligne + 1 && ligne + 1 < g.getNbLigne() && 0 <= colonne - 1 && colonne - 1 < g.getNbcol() && g.plateau[ligne + 1][colonne - 1] == id) {
+            ligne++;
+            colonne--;
+            cpt++;
+        }
+
+        // (Règle offensive B SUITE)
+        // Partie où on regarde la case en bas à gauche
+        if (nbJeton == 3)
+        {
+            if (cpt == 3) {
+                // On regarde cette case :
+                //       *
+                //     *
+                //   *
+                //(-)
+
+                // On vérif d'abord son on est pas hors limite avant de faire ce qu'on a dit
+                if (0 <= ligne + 1 && ligne + 1 < g.getNbLigne() && 0 <= colonne - 1 && colonne - 1 < g.getNbcol() &&     g.plateau[ligne + 1][colonne - 1] == 0) {
+                    nbcasevide++;
+                }
+            }
+        }
+
+        // (Règle offensive C SUITE)
+        // Partie où on regarde les paires en bas à gauche de la diago
+        else if (nbJeton == 2)
+        {
+            if (cpt == 2) {
+                // On regarde les paire en bas à gauche de la diago croissante
+                //       *
+                //     *
+                //  (-)
+                //(-)
+
+                // On vérif d'abord si on est pas hors limite avant de faire ce qu'on a dit
+                if (0 <= ligne + 2 && ligne + 2 < g.getNbLigne() && 0 <= colonne - 2 && colonne - 2 < g.getNbcol() &&   g.plateau[ligne + 1][colonne - 1] == 0 && g.plateau[ligne + 2][colonne - 2] == 0) {
+                    nbcasevide += 2;
+                }
+
+                // 2eme partie où on regarde la case en base à gauche correspondant à la paire
+                //       -
+                //     *
+                //   *
+                //(-)
+
+                // On vérif d'abord son on est pas hors limite avant de faire ce qu'on a dit
+                else if (0 <= ligne + 1 && ligne + 1 < g.getNbLigne() && 0 <= colonne - 1 && colonne - 1 < g.getNbcol() &&   g.plateau[ligne + 1][colonne - 1] == 0) {
+                    nbcasevide++;
 
                 }
             }
         }
-        return gagne;
-
+        if (cpt == nbJeton)
+        {
+            return nbcasevide;
+        }
+        return 0; // <- cf explication 33 de la feuille
     }
+
+// Fin de ce qui est util pour les règles offensive B et C
+//==========================================================================
 
 
 
