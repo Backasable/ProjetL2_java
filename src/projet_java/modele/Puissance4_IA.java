@@ -348,6 +348,7 @@ public class Puissance4_IA extends BrainIA
         // diago decroissante
         int nbCaseVideDD = verifDiagoDecroissante(ligne, colonne, id, nbJeton);
 
+        // Traite la règle offensive B si on a un alignement sur les ligne de 3 pion
         if(nbCaseVideL!=0)
         {
             if (nbJeton==3)
@@ -362,6 +363,7 @@ public class Puissance4_IA extends BrainIA
                 }
             }
 
+            // Règle offensive C teste l'alignement sur la ligne
             else if (nbJeton==2)
             {
 
@@ -381,6 +383,7 @@ public class Puissance4_IA extends BrainIA
 
         }
 
+        // Teste alignement sur la colonnes
         if(nbCaseVideC!=0)
         {
             if (nbJeton==3)
@@ -413,6 +416,7 @@ public class Puissance4_IA extends BrainIA
             }
 
         }
+        // Teste alignement sur la diagonale croissante
         if(nbCaseVideDC!=0)
         {
             if (nbJeton==3)
@@ -445,6 +449,7 @@ public class Puissance4_IA extends BrainIA
             }
 
         }
+        // Teste l'alignement sur la diagonal decroisante
         if(nbCaseVideDD!=0)
         {
             if (nbJeton==3)
